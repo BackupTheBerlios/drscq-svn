@@ -1,0 +1,273 @@
+/*
+ * ==============================================================================
+ *  Name        : DCQ.rss
+ *  Part of     : DCQ
+ *  Interface   :
+ *  Description :
+ *  Version     :
+ *
+ *  Copyright (c) 2006 Nokia Corporation.
+ *  This material, including documentation and any related
+ *  computer programs, is protected by copyright controlled by
+ *  Nokia Corporation.
+ * ==============================================================================
+ */
+
+NAME DCQX
+
+//  INCLUDES
+#include <eikon.rh>
+#include <avkon.rh>
+#include <avkon.rsg>
+#include <appinfo.rh>
+
+#include "DCQ.hrh"
+#include "DCQ.rls"
+
+// -----------------------------------------------------------------------------
+//
+//    Define the resource file signature
+//    This resource should be empty.
+//
+// -----------------------------------------------------------------------------
+//
+RESOURCE RSS_SIGNATURE
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+//    Default Document Name
+//
+// -----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_DCQ_default_docname
+{
+   buf="DCQX";
+}
+
+// -----------------------------------------------------------------------------
+//
+//    Define default menu and CBA key.
+//
+// -----------------------------------------------------------------------------
+//
+RESOURCE EIK_APP_INFO
+{
+}
+
+// ----------------------------------------------------------------------------
+//
+// r_DCQ_localisable_app_info
+//
+// ----------------------------------------------------------------------------
+//
+RESOURCE LOCALISABLE_APP_INFO r_DCQ_localisable_app_info
+{
+   short_caption = STRING_r_mult_short_caption_string;
+   caption_and_icon =
+   CAPTION_AND_ICON_INFO
+   {
+      caption = STRING_r_mult_caption_string;
+
+      number_of_icons = 2;
+      icon_file = "\\resource\\apps\\DCQ.mif";
+   };
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// -----------------------------------------------------------------------------
+//
+//    r_DCQ_login_view
+//    Define login view
+//
+// -----------------------------------------------------------------------------
+//
+RESOURCE AVKON_VIEW r_DCQ_login_view
+{
+   menubar = r_DCQ_login_view_menubar;
+   cba = R_AVKON_SOFTKEYS_OPTIONS_EXIT;
+}
+
+// -----------------------------------------------------------------------------
+//
+//   r_DCQ_login_view_menubar
+//   Menu title definition
+//
+// -----------------------------------------------------------------------------
+//
+RESOURCE MENU_BAR r_DCQ_login_view_menubar
+{
+   titles =
+   {
+      MENU_TITLE
+      {
+         menu_pane = r_DCQ_login_view_menu;
+      }
+   };
+}
+
+// -----------------------------------------------------------------------------
+//
+//   r_DCQ_login_view_menu
+//   Menu for "Options"
+//
+// -----------------------------------------------------------------------------
+//
+RESOURCE MENU_PANE r_DCQ_login_view_menu
+{
+   items =
+   {
+      MENU_ITEM
+      {
+         command = EDCQLoginViewDoLogin;
+         txt = STRING_r_mult_do_login;
+      },
+      MENU_ITEM
+      {
+         command = EDCQLoginViewNewAccount;
+         txt = STRING_r_mult_new_account;
+      },
+      MENU_ITEM
+      {
+         command = EDCQLoginViewSettings;
+         txt = STRING_r_mult_settings;
+      },
+      MENU_ITEM
+      {
+         command = EDCQCommonAbout;
+         txt = STRING_r_mult_about;
+      },
+      MENU_ITEM
+      {
+         command = EAknSoftkeyExit;
+         txt = STRING_r_mult_exit;
+      }
+   };
+}
+
+// -----------------------------------------------------------------------------
+//
+//   r_DCQ_login_view_settings
+//   Settings for login
+//
+/********************** Begin Remember password setting item **************************************/
+RESOURCE AVKON_SETTING_ITEM_LIST r_DCQ_login_view_settings
+{
+   flags = EAknSettingItemNumberedStyle;
+   title = STRING_r_mult_do_login;
+   initial_number = 1;
+   items =
+   {
+      AVKON_SETTING_ITEM
+      {
+         identifier = EDCQLoginViewSettingRememberPass;
+         setting_page_resource = r_remember_pass_setting_page;
+         associated_resource = r_popup_setting_remember_pass_texts;
+         name = STRING_r_mult_remember_pass;
+      }
+   };
+}
+
+RESOURCE AVKON_POPUP_SETTING_TEXTS r_popup_setting_remember_pass_texts
+{
+   flags = 0;
+   setting_texts_resource = r_remember_pass_yes_no_texts;
+}
+
+RESOURCE ARRAY r_remember_pass_yes_no_texts
+{
+   items =
+   {
+      AVKON_ENUMERATED_TEXT
+      {  value = 1; text = STRING_r_mult_remember_pass_yes;},
+      AVKON_ENUMERATED_TEXT
+      {  value = 0; text = STRING_r_mult_remember_pass_no;}
+   };
+}
+
+RESOURCE AVKON_SETTING_PAGE r_remember_pass_setting_page
+{
+   number = 0;
+   label = STRING_r_mult_remember_pass;
+   type = EAknCtPopupSettingList;
+   editor_resource_id = r_remember_pass_popup_setting_list;
+}
+
+RESOURCE POPUP_SETTING_LIST r_remember_pass_popup_setting_list
+{
+   flags= 0;
+}
+/********************** End Remember password setting item **************************************/
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// -----------------------------------------------------------------------------
+//
+//    r_DCQ_view2
+//    Define view 2
+//
+// -----------------------------------------------------------------------------
+//
+RESOURCE AVKON_VIEW r_DCQ_view2
+{
+   menubar = r_DCQ_menubar2;
+   cba = R_AVKON_SOFTKEYS_OPTIONS_EXIT;
+}
+
+// -----------------------------------------------------------------------------
+//
+//   r_DCQ_menubar2
+//   Menu title definition
+//
+// -----------------------------------------------------------------------------
+//
+RESOURCE MENU_BAR r_DCQ_menubar2
+{
+   titles =
+   {
+      MENU_TITLE
+      {
+         menu_pane = r_DCQ_menu2;
+      }
+   };
+}
+
+// -----------------------------------------------------------------------------
+//
+//   r_DCQ_menu2
+//   Menu for "Options"
+//
+// -----------------------------------------------------------------------------
+//
+RESOURCE MENU_PANE r_DCQ_menu2
+{
+   items =
+   {
+      //            MENU_ITEM
+      //            {
+      //                command = EDCQSwitchToView1;
+      //                txt = STRING_r_mult_switch_to_view1;
+      //            },
+      //            MENU_ITEM
+      //            {
+      //                command = EDCQCommand1;
+      //                txt = STRING_r_mult_command1;
+      //            },
+      MENU_ITEM
+      {
+         command = EAknSoftkeyExit;
+         txt = STRING_r_mult_exit;
+      }
+   };
+}
+
+// -----------------------------------------------------------------------------
+//
+// Resources for messages.
+//
+// -----------------------------------------------------------------------------
+//
+RESOURCE TBUF32 r_mult_command1_text
+{  buf=STRING_r_mult_command1_text;}
+
+// End of File

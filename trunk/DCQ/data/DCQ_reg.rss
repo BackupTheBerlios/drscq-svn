@@ -1,0 +1,30 @@
+/*
+* ==============================================================================
+*  Name        : DCQ_reg.rss
+*  Part of     : DCQ
+*  Interface   :
+*  Description :
+*  Version     :
+*
+*  Copyright (c) 2006 Nokia Corporation.
+*  This material, including documentation and any related
+*  computer programs, is protected by copyright controlled by
+*  Nokia Corporation.
+* ==============================================================================
+*/
+
+
+#include <appinfo.rh>
+#include <DCQ.rsg>
+
+UID2 KUidAppRegistrationResourceFile
+UID3 0xA00001FA
+
+RESOURCE APP_REGISTRATION_INFO 
+    {
+    app_file="DCQ";
+    newfile = KAppDoesNotSupportNewFile;
+    embeddability = KAppNotEmbeddable;
+    localisable_resource_file = "\\resource\\apps\\DCQ";
+    localisable_resource_id = R_DCQ_LOCALISABLE_APP_INFO;
+    }

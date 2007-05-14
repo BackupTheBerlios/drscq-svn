@@ -1,0 +1,65 @@
+/*
+* ==============================================================================
+*  Name        : DCQ.mmp
+*  Part of     : DCQ
+*  Interface   :
+*  Description :
+*  Version     :
+*
+*  Copyright (c) 2004-2006 Nokia Corporation.
+*  This material, including documentation and any related
+*  computer programs, is protected by copyright controlled by
+*  Nokia Corporation.
+* ==============================================================================
+*/
+
+
+TARGET            DCQ.exe
+TARGETTYPE        exe
+UID               0x0 0xA00001FA
+
+TARGETPATH        \system\apps\DCQ
+
+SOURCEPATH        ..\src
+SOURCE            DCQ.cpp
+SOURCE            DCQApplication.cpp
+SOURCE            DCQAppUi.cpp
+SOURCE            DCQDocument.cpp
+SOURCE            DCQLoginView.cpp DCQLoginViewContainer.cpp DCQView2.cpp
+SOURCE            DCQContainer2.cpp
+
+SOURCEPATH        ..\data
+
+START RESOURCE    DCQ.rss
+HEADER
+TARGETPATH        resource\apps
+END
+
+START RESOURCE    DCQ_reg.rss
+#ifdef WINSCW
+TARGETPATH 	      \private\10003a3f\apps
+#else
+TARGETPATH 	      \private\10003a3f\import\apps
+#endif
+END
+
+
+USERINCLUDE       ..\inc
+SYSTEMINCLUDE     \epoc32\include
+
+LIBRARY           euser.lib
+LIBRARY           apparc.lib
+LIBRARY           cone.lib
+LIBRARY           eikcore.lib
+LIBRARY           avkon.lib
+LIBRARY           commonengine.lib
+
+LANG              SC
+
+VENDORID          0
+
+CAPABILITY        NONE
+
+// End of File
+SOURCEPATH ..\src
+SOURCE DCQappview.cpp DCQLoginViewSettings.cpp

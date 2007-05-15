@@ -151,14 +151,29 @@ RESOURCE MENU_PANE r_DCQ_login_view_menu
 //   r_DCQ_login_view_settings
 //   Settings for login
 //
-/********************** Begin Remember password setting item **************************************/
+
+
 RESOURCE AVKON_SETTING_ITEM_LIST r_DCQ_login_view_settings
 {
-   flags = EAknSettingItemNumberedStyle;
+   flags = 0;                             //non-numbered setting list
    title = STRING_r_mult_do_login;
    initial_number = 1;
    items =
    {
+      AVKON_SETTING_ITEM
+      {
+         identifier = EDCQLoginViewSettingICQNumber;
+         setting_page_resource = r_text_setting_ICQ_number_page;
+         name = STRING_r_mult_ICQ_number;
+      },
+
+      AVKON_SETTING_ITEM
+      {
+         identifier = EDCQLoginViewSettingICQPassword;
+         setting_page_resource = r_ICQ_alpha_password_setting_page;
+         name = STRING_r_mult_ICQ_password;
+      },
+
       AVKON_SETTING_ITEM
       {
          identifier = EDCQLoginViewSettingRememberPass;
@@ -166,8 +181,40 @@ RESOURCE AVKON_SETTING_ITEM_LIST r_DCQ_login_view_settings
          associated_resource = r_popup_setting_remember_pass_texts;
          name = STRING_r_mult_remember_pass;
       }
+
    };
 }
+
+/********************** Begin ICQ number setting item **************************************/
+RESOURCE AVKON_SETTING_PAGE r_text_setting_ICQ_number_page
+{
+   number = 1;
+   label = STRING_r_mult_ICQ_number;
+   type = EEikCtEdwin;
+   editor_resource_id = r_settinglist_ICQ_number_edwin;
+}
+
+RESOURCE EDWIN r_settinglist_ICQ_number_edwin
+{
+   maxlength = KMaxICQNumberLength;
+}
+/********************** End ICQ number setting item **************************************/
+/********************** Begin ICQ password setting item **************************************/
+RESOURCE AVKON_SETTING_PAGE r_ICQ_alpha_password_setting_page
+{
+   number = 2;
+   label = STRING_r_mult_ICQ_password;
+   type = EEikCtSecretEd;
+   editor_resource_id = r_settinglist_ICQ_alpha_password;
+}
+
+RESOURCE SECRETED r_settinglist_ICQ_alpha_password
+{
+   num_letters = KMaxICQPasswordLength;  
+}
+
+/********************** End ICQ password setting item **************************************/
+/********************** Begin Remember password setting item **************************************/
 
 RESOURCE AVKON_POPUP_SETTING_TEXTS r_popup_setting_remember_pass_texts
 {
@@ -188,7 +235,7 @@ RESOURCE ARRAY r_remember_pass_yes_no_texts
 
 RESOURCE AVKON_SETTING_PAGE r_remember_pass_setting_page
 {
-   number = 0;
+   number = 3;
    label = STRING_r_mult_remember_pass;
    type = EAknCtPopupSettingList;
    editor_resource_id = r_remember_pass_popup_setting_list;
@@ -198,7 +245,7 @@ RESOURCE POPUP_SETTING_LIST r_remember_pass_popup_setting_list
 {
    flags= 0;
 }
-/********************** End Remember password setting item **************************************/
+/********************** End Remember password setting item ***************************************/
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // -----------------------------------------------------------------------------

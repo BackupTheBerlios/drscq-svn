@@ -44,11 +44,17 @@ rls_string STRING_r_mult_new_account "Neuer Account"
 rls_string STRING_r_mult_settings "Einstellungen"
 
 // Settings
+rls_string STRING_r_mult_ICQ_number "ICQ Nummer" 
+
+rls_string STRING_r_mult_ICQ_password "ICQ Passwort"
+
 rls_string STRING_r_mult_remember_pass "Passwort merken"
 
 rls_string STRING_r_mult_remember_pass_yes "ja"
 
 rls_string STRING_r_mult_remember_pass_no "nein"
+
+
 
 
 

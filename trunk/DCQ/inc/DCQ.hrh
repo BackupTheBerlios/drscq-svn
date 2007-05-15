@@ -18,11 +18,24 @@
 
 // DCQ enumerate command codes
 
+// DCQ application view ids.
+enum TDCQViewNumber
+{
+   EDCQLoginViewId = 0xA01,
+   EDCQView2Id
+};
+
 enum TDCQCommonCommandIds
 {  
    EDCQCommonAbout = 0x101
 };
 
+
+/** Begin Login view **********************************************************/
+
+#define KMaxICQNumberLength      30
+#define KMinICQPasswordLength    3
+#define KMaxICQPasswordLength    8
 
 enum TDCQLoginViewCommandIds
 {
@@ -33,16 +46,14 @@ enum TDCQLoginViewCommandIds
 
 enum TDCQLoginViewSettings
 {
-  EDCQLoginViewSettingRememberPass = 0x211 
+  EDCQLoginViewSettingICQNumber     = 0x211,
+  EDCQLoginViewSettingICQPassword   = 0x212,
+  EDCQLoginViewSettingRememberPass  = 0x213
 };
 
+/** End Login view **********************************************************/
 
-// DCQ application view ids.
-enum TDCQViewNumber
-{
-   EDCQLoginViewId = 0xA01,
-   EDCQView2Id
-};
+
 #endif // __DCQ_HRH__
 
 // End of File

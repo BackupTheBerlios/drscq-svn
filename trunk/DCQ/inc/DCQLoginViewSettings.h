@@ -13,6 +13,7 @@
 
 // INCLUDES
 #include <aknsettingitemlist.h>
+#include "DCQ.hrh"
 
 // CLASS DECLARATION
 
@@ -37,7 +38,8 @@ class CDCQLoginViewSettings : public CAknSettingItemList
 
    private:
       // Data
-
+      TBuf <KMaxICQNumberLength>    iICQNumber;
+      TBuf <KMaxICQPasswordLength>  iICQPassword;
       TBool iFlag;
 
 };

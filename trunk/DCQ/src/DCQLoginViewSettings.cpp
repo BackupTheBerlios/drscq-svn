@@ -41,6 +41,7 @@ CAknSettingItem* CDCQLoginViewSettings::CreateSettingItemL( TInt aIdentifier)
          settingItem =new (ELeave) CAknBinaryPopupSettingItem(aIdentifier, iFlag);
          break;
       }
+      default: return NULL;     
    }
    
    return settingItem;

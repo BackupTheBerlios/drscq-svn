@@ -96,7 +96,8 @@ void CDCQLoginView::DoActivateL( const TVwsViewId& /*aPrevViewId*/,
        iSettings->MakeVisible(ETrue);
        iSettings->SetRect(ClientRect());
        iSettings->ActivateL();
-    }
+       iSettings->LoadSettingsL();
+    }   
  }
 
 
@@ -128,6 +129,16 @@ void CDCQLoginView::HandleCommandL( TInt aCommand)
 
 void CDCQLoginView::HandleSizeChange( TInt aType)
 {
+   if ( iSettings )
+   {
+      if ( aType==KEikDynamicLayoutVariantSwitch)
+      {
+         TRect rect;
+         AknLayoutUtils::LayoutMetricsRect(AknLayoutUtils::EMainPane, rect);
+         iSettings->SetRect(rect);
+      }
+   }
+   
    if ( iContainer)
    {
       iContainer->HandleResourceChange( aType);

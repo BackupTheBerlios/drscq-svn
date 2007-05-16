@@ -69,10 +69,10 @@ void CDCQAppUi::HandleResourceChangeL( TInt aType)
 {
    CAknAppUi::HandleResourceChangeL( aType);
    
-   if ( aType==KEikDynamicLayoutVariantSwitch)
+   if ( aType == KEikDynamicLayoutVariantSwitch)
    {
-      //        iLoginView->HandleSizeChange(aType);
-      iAppView2->HandleSizeChange(aType);
+      iLoginView->HandleSizeChange(aType);
+      //        iAppView2->HandleSizeChange(aType);
    }
 }
 

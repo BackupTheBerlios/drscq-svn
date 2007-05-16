@@ -194,9 +194,11 @@ RESOURCE AVKON_SETTING_PAGE r_text_setting_ICQ_number_page
    editor_resource_id = r_settinglist_ICQ_number_edwin;
 }
 
-RESOURCE EDWIN r_settinglist_ICQ_number_edwin
+RESOURCE EDWIN  r_settinglist_ICQ_number_edwin
 {
    maxlength = KMaxICQNumberLength;
+   default_input_mode = EAknEditorNumericInputMode;
+   allowed_input_modes = EAknEditorNumericInputMode;
 }
 /********************** End ICQ number setting item **************************************/
 /********************** Begin ICQ password setting item **************************************/

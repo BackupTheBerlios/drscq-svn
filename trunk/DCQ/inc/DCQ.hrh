@@ -44,11 +44,19 @@ enum TDCQLoginViewCommandIds
    EDCQLoginViewSettings
 };
 
-enum TDCQLoginViewSettings
+enum TDCQLoginViewSettingItemIds
 {
-  EDCQLoginViewSettingICQNumber     = 0x211,
-  EDCQLoginViewSettingICQPassword   = 0x212,
-  EDCQLoginViewSettingRememberPass  = 0x213
+  EDCQLoginViewSettingICQNumberId     = 0x211,
+  EDCQLoginViewSettingICQPasswordId   = 0x212,
+  EDCQLoginViewSettingRememberPassId  = 0x213
+};
+
+enum TDCQLoginViewSettingItemOrder
+{
+   EDCQLoginViewSettingOrderInitial       = 0,
+   EDCQLoginViewSettingICQNumberOrder     = EDCQLoginViewSettingOrderInitial,
+   EDCQLoginViewSettingICQPasswordOrder   = 1,
+   EDCQLoginViewSettingRememberPassOrder  = 2
 };
 
 /** End Login view **********************************************************/

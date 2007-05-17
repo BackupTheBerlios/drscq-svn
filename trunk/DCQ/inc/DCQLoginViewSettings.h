@@ -12,7 +12,7 @@
 #define CDCQLOGINVIEWSETTINGS_H
 
 // INCLUDES
-#include <aknsettingitemlist.h>
+#include "DCQSaveableSettingItemList.h"
 #include "DCQ.hrh"
 
 // CLASS DECLARATION
@@ -21,26 +21,45 @@
  *  CDCQLoginViewSettings
  * 
  */
-class CDCQLoginViewSettings : public CAknSettingItemList
+class CDCQLoginViewSettings : public CDCQSaveableSettingItemList
 {
    public:
-      // Constructors and destructor
-
-      void ConstructL();
-
-      CAknSettingItem* CreateSettingItemL( TInt aIdentifier);
-
+      // Constructors and destructor      
+      
+      CDCQLoginViewSettings();
+      
       /**
        * ~CDCQLoginView.
        * Virtual Destructor.
        */
       virtual ~CDCQLoginViewSettings();
 
+      void ConstructL();      
+      
+      void InternalizeSettingsDataL( RReadStream& aStream );
+      
+      void ExternalizeSettingsDataL( RWriteStream& aStream ) const;   
+      
+      /**
+       * Function:   EditCurrentItemL
+       *
+       * Discussion: Starts the setting page for the currently selected item 
+       *          in the list.
+       */
+      void EditCurrentItemL();     
+
    private:
+      
+      CAknSettingItem* CreateSettingItemL( TInt aIdentifier);
+      
+      void HandleListBoxEventL(CEikListBox * /*aListBox*/,
+                                       TListBoxEvent aEventType);
+      
+      
       // Data
       TBuf <KMaxICQNumberLength>    iICQNumber;
       TBuf <KMaxICQPasswordLength>  iICQPassword;
-      TBool iFlag;
+      TBool                         iRememberPasswordFlag;
 
 };
 

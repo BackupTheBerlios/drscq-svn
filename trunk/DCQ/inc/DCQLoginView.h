@@ -20,7 +20,6 @@
 #include <aknview.h>
 
 // FORWARD DECLARATIONS
-class CDCQLoginViewContainer;
 class CDCQLoginViewSettings;
 
 // CLASS DECLARATION
@@ -96,15 +95,13 @@ class CDCQLoginView : public CAknView
        * 2nd phase constructor.
        */
        void ConstructL();
-
+       
    private:
       // Data
-      CDCQLoginViewContainer * iContainer;
-      
-      CDCQLoginViewSettings * iSettings;
+      CDCQLoginViewSettings *    iLoginSettings;
 
       /** View Identifier **/
-      TUid iIdentifier;      
+      TUid iIdentifier;        
 };
 
 #endif // __DCQ_LOGINVIEW_H__

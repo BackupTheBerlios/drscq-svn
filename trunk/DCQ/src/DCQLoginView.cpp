@@ -20,17 +20,18 @@
 #include <DCQ.rsg>
 #include <stringloader.h>
 
-#include "DCQLoginView.h"
-#include "DCQLoginViewContainer.h"
-#include "DCQLoginViewSettings.h"
 #include "DCQ.hrh"
+#include "FileIO.h"
+#include "DCQLoginView.h"
+#include "DCQLoginViewSettings.h"
 
 // ========================= MEMBER FUNCTIONS ==================================
 
-CDCQLoginView::CDCQLoginView()
-{  
-}
+_LIT(KLoginViewSettingsFile, "LoginSet.dat");
 
+CDCQLoginView::CDCQLoginView()
+{
+}
 
 CDCQLoginView* CDCQLoginView::NewL()
 {
@@ -38,7 +39,6 @@ CDCQLoginView* CDCQLoginView::NewL()
    CleanupStack::Pop( self);
    return self;
 }
-
 
 CDCQLoginView* CDCQLoginView::NewLC()
 {
@@ -48,13 +48,10 @@ CDCQLoginView* CDCQLoginView::NewLC()
    return self;
 }
 
-
-
 void CDCQLoginView::ConstructL()
 {
-   BaseConstructL( R_DCQ_LOGIN_VIEW );
+   BaseConstructL( R_DCQ_LOGIN_VIEW);
 }
-
 
 // -----------------------------------------------------------------------------
 // CDCQLoginView::~CDCQLoginView()
@@ -66,7 +63,6 @@ CDCQLoginView::~CDCQLoginView()
    // No implementation required  
 }
 
-
 // -----------------------------------------------------------------------------
 // CDCQLoginView::Id()
 // Returns View's ID.
@@ -77,77 +73,52 @@ TUid CDCQLoginView::Id() const
    return TUid::Uid( EDCQLoginViewId);
 }
 
-
-
 void CDCQLoginView::DoActivateL( const TVwsViewId& /*aPrevViewId*/,
-                             TUid /*aCustomMessageId*/, const TDesC8& /*aCustomMessage*/)
- {
-    if (iContainer == NULL)
-    {
-       iContainer = CDCQLoginViewContainer::NewL( ClientRect());
-    }
-    
-    if (iSettings == NULL)
-    {
-       iSettings = new (ELeave) CDCQLoginViewSettings;
-       iSettings->SetMopParent( this );
-       iSettings->ConstructL();
-       AppUi()->AddToStackL(iSettings);
-       iSettings->MakeVisible(ETrue);
-       iSettings->SetRect(ClientRect());
-       iSettings->ActivateL();
-       iSettings->LoadSettingsL();
-    }   
- }
-
-
+                                TUid /*aCustomMessageId*/, const TDesC8& /*aCustomMessage*/)
+{
+   if (iLoginSettings == NULL)
+   {
+      iLoginSettings = new (ELeave) CDCQLoginViewSettings;
+      TFileIO::LoadSettingsFromFileL(*iEikonEnv,
+                                     TFileName(KLoginViewSettingsFile),
+                                     *iLoginSettings);
+      iLoginSettings->SetMopParent( this);
+      iLoginSettings->ConstructL();
+      AppUi()->AddToStackL(iLoginSettings);
+      iLoginSettings->MakeVisible(ETrue);
+      iLoginSettings->SetRect(ClientRect());
+      iLoginSettings->ActivateL();
+      iLoginSettings->LoadSettingsL();
+   }
+}
 
 void CDCQLoginView::DoDeactivate()
 {
-   if ( iContainer)
+   if (iLoginSettings != NULL)
    {
-      AppUi()->RemoveFromStack( iContainer);
-      delete iContainer;
-      iContainer = NULL;
-   }
-   
-   if(iSettings)
-   {
-      AppUi()->RemoveFromStack( iSettings);
-      delete iSettings;
-      iSettings = NULL;
+      TFileIO::SaveSettingsToFileL(*iEikonEnv,
+                                   TFileName(KLoginViewSettingsFile),
+                                   *iLoginSettings);
+      AppUi()->RemoveFromStack( iLoginSettings);
+      delete iLoginSettings;
+      iLoginSettings = NULL;
    }
 }
-
 
 void CDCQLoginView::HandleCommandL( TInt aCommand)
-{  
-   AppUi()->HandleCommandL( aCommand );
+{
+   AppUi()->HandleCommandL( aCommand);
 }
 
-
-
 void CDCQLoginView::HandleSizeChange( TInt aType)
-{
-   if ( iSettings )
+{  
+   if (iLoginSettings)
    {
-      if ( aType==KEikDynamicLayoutVariantSwitch)
+      if (aType==KEikDynamicLayoutVariantSwitch)
       {
          TRect rect;
          AknLayoutUtils::LayoutMetricsRect(AknLayoutUtils::EMainPane, rect);
-         iSettings->SetRect(rect);
-      }
-   }
-   
-   if ( iContainer)
-   {
-      iContainer->HandleResourceChange( aType);
-      
-      if ( aType==KEikDynamicLayoutVariantSwitch)
-      {
-         TRect rect;
-         AknLayoutUtils::LayoutMetricsRect(AknLayoutUtils::EMainPane, rect);
-         iContainer->SetRect(rect);
+         iLoginSettings->SetRect(rect);
       }
    }
 }

@@ -17,6 +17,10 @@
 TARGET            DCQ.exe
 TARGETTYPE        exe
 UID               0x0 0xA00001FA
+EPOCSTACKSIZE     0x8000 
+SECUREID		  0xA00001FA
+
+CAPABILITY		NONE
 
 TARGETPATH        \system\apps\DCQ
 
@@ -25,21 +29,22 @@ SOURCE            DCQ.cpp
 SOURCE            DCQApplication.cpp
 SOURCE            DCQAppUi.cpp
 SOURCE            DCQDocument.cpp
-SOURCE            DCQLoginView.cpp DCQLoginViewContainer.cpp DCQView2.cpp
+SOURCE            DCQLoginView.cpp DCQView2.cpp
 SOURCE            DCQContainer2.cpp
 
 SOURCEPATH        ..\data
 
 START RESOURCE    DCQ.rss
-HEADER
-TARGETPATH        resource\apps
+	HEADER
+	TARGETPATH    "\\resource\\apps"
+	LANG		  SC
 END
 
 START RESOURCE    DCQ_reg.rss
 #ifdef WINSCW
-TARGETPATH 	      \private\10003a3f\apps
+TARGETPATH 	      "\\private\\10003a3f\\apps"
 #else
-TARGETPATH 	      \private\10003a3f\import\apps
+TARGETPATH 	      "\\private\\10003a3f\\import\\apps"
 #endif
 END
 
@@ -52,14 +57,13 @@ LIBRARY           apparc.lib
 LIBRARY           cone.lib
 LIBRARY           eikcore.lib
 LIBRARY           avkon.lib
-LIBRARY           commonengine.lib
+LIBRARY           commonengine.lib estor.lib efsrv.lib eikcoctl.lib eikctl.lib
 
 LANG              SC
 
 VENDORID          0
 
-CAPABILITY        NONE
 
 // End of File
 SOURCEPATH ..\src
-SOURCE DCQappview.cpp DCQLoginViewSettings.cpp
+SOURCE DCQappview.cpp DCQLoginViewSettings.cpp FileIO.cpp

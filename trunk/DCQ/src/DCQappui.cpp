@@ -19,7 +19,6 @@
 #include "DCQ.pan"
 #include "DCQAppUi.h"
 #include "DCQLoginView.h"
-#include "DCQView2.h"
 
 // ========================= MEMBER FUNCTIONS ==================================
 
@@ -34,9 +33,7 @@ void CDCQAppUi::ConstructL()
    BaseConstructL(EAknEnableSkin);
    
    iLoginView = CDCQLoginView::NewL();
-   iAppView2 = CDCQView2::NewL();
    AddViewL(iLoginView);
-   AddViewL(iAppView2);
    SetDefaultViewL( *iLoginView );
    
 }
@@ -46,7 +43,7 @@ void CDCQAppUi::ConstructL()
 // Takes care of command handling.
 // -----------------------------------------------------------------------------
 //
-void CDCQAppUi::HandleCommandL( TInt aCommand)
+void CDCQAppUi::HandleCommandL(TInt aCommand)
 {
    switch ( aCommand)
    {
@@ -55,7 +52,7 @@ void CDCQAppUi::HandleCommandL( TInt aCommand)
          Exit();
          break;
       default:
-         Panic( EDCQBasicUi);
+         Panic(EDCQBasicUi);
          break;
    }
 }
@@ -72,7 +69,6 @@ void CDCQAppUi::HandleResourceChangeL( TInt aType)
    if ( aType == KEikDynamicLayoutVariantSwitch)
    {
       iLoginView->HandleSizeChange(aType);
-      //        iAppView2->HandleSizeChange(aType);
    }
 }
 

@@ -19,11 +19,13 @@
 #include <aknnotewrappers.h>
 #include <DCQ.rsg>
 #include <stringloader.h>
+#include <aknstaticnotedialog.h> 
 
 #include "DCQ.hrh"
 #include "FileIO.h"
 #include "DCQLoginView.h"
 #include "DCQLoginViewSettings.h"
+#include "DCQdocument.h"
 
 // ========================= MEMBER FUNCTIONS ==================================
 
@@ -107,7 +109,65 @@ void CDCQLoginView::DoDeactivate()
 
 void CDCQLoginView::HandleCommandL( TInt aCommand)
 {
-   AppUi()->HandleCommandL( aCommand);
+   // Try to find the given command in list of valid commands
+   switch( aCommand )
+   {
+      case EDCQLoginViewDoLogin :
+      {            
+         break;
+      }
+      case EDCQLoginViewNewAccount :
+      {
+         break;
+      }
+      case EDCQLoginViewSettings :
+      {
+         break;
+      }
+      case EDCQCommonAbout :
+      { 
+         // retrieve document...
+         CDCQDocument * iDoc = static_cast < CDCQDocument * > ( AppUi()->Document() );                 
+         
+         // ...check, if document is not NULL
+         if ( iDoc != NULL )
+         {
+            // ... if not, query currrently available protocols
+            CDesCArrayFlat * protocols = new ( ELeave ) CDesCArrayFlat( 10 );
+            CleanupStack::PushL( protocols );
+            
+            if ( iDoc->EnumeratePossibleProtocolsL( *protocols ) )
+            {
+               CAknStaticNoteDialog* dlg = new ( ELeave ) CAknStaticNoteDialog;
+               dlg->PrepareLC( R_DCQ_INFO_STATIC_NOTIFICATION );
+               dlg->SetNumberOfBorders( 4 );
+               dlg->SetTextNumberL( protocols->Count() );
+               dlg->RunLD();
+            }
+            
+            CleanupStack::Pop( protocols );
+         }
+         else
+         {            
+            ASSERT( 0 );
+         }
+         
+         
+         break;
+      }
+      case EAknSoftkeyExit :
+      {
+         // Exit will be handled by AppUi
+         AppUi()->HandleCommandL( aCommand );
+         break;         
+      }
+      default:
+      {
+         // If nothing found, we do nothing
+         break;
+      }
+   }
+  
 }
 
 void CDCQLoginView::HandleSizeChange( TInt aType)

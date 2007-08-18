@@ -63,7 +63,7 @@ LANG              SC
 
 VENDORID          0
 
-
-// End of File
 SOURCEPATH ..\src
 SOURCE DCQappview.cpp DCQLoginViewSettings.cpp FileIO.cpp
+SOURCEPATH ..\src\protocols\OSCARv7v8v9
+SOURCE OSCARProtocol.cpp

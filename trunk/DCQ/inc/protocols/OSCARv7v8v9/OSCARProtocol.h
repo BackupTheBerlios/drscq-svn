@@ -11,12 +11,11 @@
 #ifndef COSCARPROTOCOL_H
 #define COSCARPROTOCOL_H
 
-#include <e32base.h>
-
+#include "protocols/AbstractProtocol.h"
 
 namespace Protocol {
 
-   class COSCARProtocol : public CBase
+   class COSCARProtocol : public CAbstractProtocol
    {
    public:
            
@@ -25,12 +24,14 @@ namespace Protocol {
       static COSCARProtocol * NewLC();
       
       ~COSCARProtocol();
+      
+      TUint GetProtocolId() const;
 
       const TPtrC GetProtocolDescription() const;
 
-      bool Login() const;
+      bool Login();
 
-      bool Logout() const;
+      bool Logout();
 
    private:
       
@@ -38,12 +39,9 @@ namespace Protocol {
       
       void ConstructL();
       
-   private:
-      
-     static const TPtrC KProtocolDesc;
-      
    };
 
 } // end namespace DCQLib
 
 #endif // COSCARPROTOCOL_H
+

@@ -32,9 +32,6 @@ rls_string STRING_r_mult_about "Info"
 //d:Menu text to exit function
 rls_string STRING_r_mult_exit "Exit"
 
-
-
-
 /* Login View ***********************************************************************/
 // Menu items
 rls_string STRING_r_mult_do_login "Login"
@@ -54,7 +51,10 @@ rls_string STRING_r_mult_remember_pass_yes "ja"
 
 rls_string STRING_r_mult_remember_pass_no "nein"
 
-
+/* Info static notification ***********************************************************************/
+rls_string STRING_r_mult_info "Info:\n" \
+                              "DCQ Version 'TODO'\n" \
+                              "Protokolle: %d\n";
 
 
 

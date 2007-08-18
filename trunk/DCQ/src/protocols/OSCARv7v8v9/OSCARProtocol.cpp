@@ -9,10 +9,11 @@
  *********************************************************************/
 
 #include "protocols/OSCARv7v8v9/OSCARProtocol.h"
+#include "protocols/OSCARv7v8v9/OSCARConstants.h"
 
 namespace Protocol {
    
-   _LIT(KProtocolDesc, "OSCAR(ICQ) v7,v8,v9");   
+      
    
    COSCARProtocol * COSCARProtocol::NewL()
    {
@@ -46,17 +47,22 @@ namespace Protocol {
       
    }
    
-   const TPtrC COSCARProtocol::GetProtocolDescription() const
+   TUint COSCARProtocol::GetProtocolId() const
    {
-      return KProtocolDesc;
+      return static_cast < TUint > ( K_PROTOCOL_ID );
    }
    
-   bool COSCARProtocol::Login() const
+   const TPtrC COSCARProtocol::GetProtocolDescription() const
+   {
+      return TPtrC( K_PROTOCOL_DESC );
+   }
+   
+   bool COSCARProtocol::Login()
    {
       return false;
    }
    
-   bool COSCARProtocol::Logout() const
+   bool COSCARProtocol::Logout()
    {
       return false;
    }

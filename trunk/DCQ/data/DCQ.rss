@@ -248,6 +248,32 @@ RESOURCE POPUP_SETTING_LIST r_remember_pass_popup_setting_list
    flags= 0;
 }
 /********************** End Remember password setting item ***************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// -----------------------------------------------------------------------------
+//
+//    r_DCQ_info_static_notification
+//    Define static notification showing general application information
+//
+// -----------------------------------------------------------------------------
+//
+RESOURCE DIALOG r_DCQ_info_static_notification
+{
+   flags = EEikDialogFlagNoDrag | EEikDialogFlagNoTitleBar | EEikDialogFlagCbaButtons | EEikDialogFlagNoShadow;   
+   buttons = R_AVKON_SOFTKEYS_CLOSE;
+   items =
+   {
+      DLG_LINE
+      {
+         type = EAknCtNote;
+         id = EDCQCommonAbout;
+         control = AVKON_NOTE
+                   {
+                     layout = ETextualNotificationLayout;
+                     singular_label = STRING_r_mult_info;                  
+                   };
+      }
+   };
+}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // -----------------------------------------------------------------------------

@@ -74,4 +74,3 @@ class CDCQAppUi : public CAknViewAppUi
 #endif // __DCQ_APPUI_H__
 
 // End of File
-    

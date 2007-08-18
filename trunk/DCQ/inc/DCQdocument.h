@@ -21,6 +21,7 @@ Copyright (c) 2004 - 2006 Nokia Corporation.
 
 // INCLUDES
 #include <akndoc.h>
+#include <badesca.h>
 
 // FORWARD DECLARATIONS
 class CDCQAppUi;
@@ -80,7 +81,7 @@ class CDCQDocument : public CAknDocument
         */
         CEikAppUi* CreateAppUiL();
         
-        bool EnumeratePossibleProtocols( CArrayFixBase& protocols ) const; 
+        bool EnumeratePossibleProtocolsL( CDesCArrayFlat& protocols ) const; 
         
     private:  // Constructors
 
@@ -100,7 +101,6 @@ class CDCQDocument : public CAknDocument
     private:
        
        Protocol::COSCARProtocol * iOSCARProtocol;
-
     };
 
 
@@ -108,4 +108,3 @@ class CDCQDocument : public CAknDocument
 
 
 // End of File
-    

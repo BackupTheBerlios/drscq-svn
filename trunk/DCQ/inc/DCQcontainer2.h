@@ -87,4 +87,3 @@ class CDCQContainer2 : public CCoeControl
 #endif // __DCQ_CONTAINER2_H__
 
 // End of File
-    

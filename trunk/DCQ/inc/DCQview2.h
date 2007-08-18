@@ -136,4 +136,3 @@ class CDCQView2: public CAknView
 
 
 // End of File
-       

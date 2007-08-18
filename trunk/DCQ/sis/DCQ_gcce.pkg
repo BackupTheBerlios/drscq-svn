@@ -6,20 +6,20 @@
 #{"DCQ"},(0xA00001FA),1,0,0
 
 ;Localised Vendor name
-%{"VendorEN"}
+%{"Ronny Roehricht"}
 
 ;Unique Vendor name
-:"Vendor"
+:"Ronny Roehricht"
 
 ;Supports Series 60 v 3.0
 [0x101F7961], 0, 0, 0, {"S60ProductID"}
 
 ;Files to install
 ;
-"..\..\..\epoc32\release\gcce\urel\DCQ.exe"                       -"!:\sys\bin\DCQ.exe"
-"..\..\..\epoc32\data\z\resource\apps\DCQ.rsc"                     -"!:\resource\apps\DCQ.rsc"
-"..\..\..\epoc32\data\z\private\10003a3f\import\apps\DCQ_reg.rsc"  -"!:\private\10003a3f\import\apps\DCQ_reg.rsc"
-"..\..\..\epoc32\data\z\resource\apps\DCQ.mif"                     -"!:\resource\apps\DCQ.mif"
+"E:\Programmierung\Symbian\9.2\S60_3rd_FP1\epoc32\release\gcce\urel\DCQ.exe"                 -"!:\sys\bin\DCQ.exe"
+"E:\Programmierung\Symbian\9.2\S60_3rd_FP1\epoc32\data\z\resource\apps\DCQ.rsc"              -"!:\resource\apps\DCQ.rsc"
+"E:\Programmierung\Symbian\9.2\S60_3rd_FP1\epoc32\data\z\private\10003a3f\apps\DCQ_reg.rsc"  -"!:\private\10003a3f\import\apps\DCQ_reg.rsc"
+"E:\Programmierung\Symbian\9.2\S60_3rd_FP1\epoc32\data\z\resource\apps\DCQ.mif"              -"!:\resource\apps\DCQ.mif"
 
 
 ;required for application to be covered by backup/restore facility 

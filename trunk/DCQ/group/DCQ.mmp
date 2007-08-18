@@ -19,8 +19,9 @@ TARGETTYPE        exe
 UID               0x0 0xA00001FA
 EPOCSTACKSIZE     0x8000 
 SECUREID		  0xA00001FA
-
-CAPABILITY		NONE
+LANG              03 SC
+VENDORID          0
+CAPABILITY		  NONE
 
 TARGETPATH        \system\apps\DCQ
 
@@ -34,12 +35,12 @@ SOURCE            DCQContainer2.cpp
 
 SOURCEPATH        ..\data
 
-START RESOURCE    DCQ.rss
+START RESOURCE DCQ.rss
 	HEADER
-	TARGETPATH    "\\resource\\apps"
-	LANG		  SC
+	TARGETPATH \\resource\apps
 END
 
+#if 0
 START RESOURCE    DCQ_reg.rss
 #ifdef WINSCW
 TARGETPATH 	      "\\private\\10003a3f\\apps"
@@ -47,6 +48,7 @@ TARGETPATH 	      "\\private\\10003a3f\\apps"
 TARGETPATH 	      "\\private\\10003a3f\\import\\apps"
 #endif
 END
+#endif
 
 
 USERINCLUDE       ..\inc
@@ -57,11 +59,10 @@ LIBRARY           apparc.lib
 LIBRARY           cone.lib
 LIBRARY           eikcore.lib
 LIBRARY           avkon.lib
-LIBRARY           commonengine.lib estor.lib efsrv.lib eikcoctl.lib eikctl.lib
+LIBRARY           commonengine.lib estor.lib efsrv.lib eikcoctl.lib eikctl.lib 
+LIBRARY			  bafl.lib
 
-LANG              SC
 
-VENDORID          0
 
 SOURCEPATH ..\src
 SOURCE DCQappview.cpp DCQLoginViewSettings.cpp FileIO.cpp

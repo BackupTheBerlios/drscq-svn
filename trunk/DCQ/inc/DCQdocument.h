@@ -22,11 +22,14 @@ Copyright (c) 2004 - 2006 Nokia Corporation.
 // INCLUDES
 #include <akndoc.h>
 
-
 // FORWARD DECLARATIONS
 class CDCQAppUi;
 class CEikApplication;
 
+namespace Protocol
+{
+   class COSCARProtocol;
+}
 
 
 // CLASS DECLARATION
@@ -76,7 +79,9 @@ class CDCQDocument : public CAknDocument
         * @return Pointer to created instance of AppUi.
         */
         CEikAppUi* CreateAppUiL();
-
+        
+        bool EnumeratePossibleProtocols( CArrayFixBase& protocols ) const; 
+        
     private:  // Constructors
 
         /**
@@ -91,6 +96,10 @@ class CDCQDocument : public CAknDocument
         * @param aApp Reference to Application class object
         */
         CDCQDocument( CEikApplication& aApp );
+        
+    private:
+       
+       Protocol::COSCARProtocol * iOSCARProtocol;
 
     };
 

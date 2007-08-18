@@ -68,12 +68,6 @@ class CDCQAppUi : public CAknViewAppUi
         * Not owned by CDCQAppUi object.
         */
         CDCQLoginView* iLoginView;
-
-        /**
-        * iAppView2, The application view 2
-        * Not owned by CDCQAppUi object.
-        */
-        CDCQView2* iAppView2;
     };
 
 

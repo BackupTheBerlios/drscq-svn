@@ -24,6 +24,8 @@ NAME DCQX
 #include "DCQ.hrh"
 #include "DCQ.rls"
 
+
+
 // -----------------------------------------------------------------------------
 //
 //    Define the resource file signature

@@ -19,7 +19,7 @@ TARGETTYPE        exe
 UID               0x0 0xA00001FA
 EPOCSTACKSIZE     0x8000 
 SECUREID		  0xA00001FA
-LANG              03 SC
+LANG              03
 VENDORID          0
 CAPABILITY		  NONE
 
@@ -51,7 +51,7 @@ END
 #endif
 
 
-USERINCLUDE       ..\inc
+USERINCLUDE       ..\inc ..\data
 SYSTEMINCLUDE     \epoc32\include
 
 LIBRARY           euser.lib
@@ -68,3 +68,6 @@ SOURCEPATH ..\src
 SOURCE DCQappview.cpp DCQLoginViewSettings.cpp FileIO.cpp
 SOURCEPATH ..\src\protocols\OSCARv7v8v9
 SOURCE OSCARProtocol.cpp
+SOURCEPATH ..\src\connection
+SOURCE CSocketServer.cpp SocketObserver.cpp
+

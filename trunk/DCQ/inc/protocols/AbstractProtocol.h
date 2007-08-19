@@ -6,10 +6,10 @@
 namespace Protocol
 {
 
-   class CAbstractProtocol : public CBase
+   class MAbstractProtocol : public CBase
    {
       public:                    
-      	virtual ~CAbstractProtocol(){}
+      	virtual ~MAbstractProtocol(){}
          
          virtual TUint GetProtocolId() const = 0;
          
@@ -20,7 +20,7 @@ namespace Protocol
          virtual bool Logout() = 0;
                            
       protected:      
-         CAbstractProtocol()
+         MAbstractProtocol()
          : CBase(){}
    
    };

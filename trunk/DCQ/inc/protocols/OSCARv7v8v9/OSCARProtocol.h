@@ -15,7 +15,7 @@
 
 namespace Protocol {
 
-   class COSCARProtocol : public CAbstractProtocol
+   class COSCARProtocol : public MAbstractProtocol
    {
    public:
            

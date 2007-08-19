@@ -134,25 +134,30 @@ void CDCQLoginView::HandleCommandL( TInt aCommand)
          {
             // ... if not, query currrently available protocols
             CDesCArrayFlat * protocols = new ( ELeave ) CDesCArrayFlat( 10 );
-            CleanupStack::PushL( protocols );
             
+            CleanupStack::PushL( protocols );            
             if ( iDoc->EnumeratePossibleProtocolsL( *protocols ) )
             {
                CAknStaticNoteDialog* dlg = new ( ELeave ) CAknStaticNoteDialog;
+               
+               // ...and prepare infos...
+               CleanupStack::PushL( dlg );
                dlg->PrepareLC( R_DCQ_INFO_STATIC_NOTIFICATION );
                dlg->SetNumberOfBorders( 4 );
                dlg->SetTextNumberL( protocols->Count() );
+               CleanupStack::Pop( dlg );
+               
+               // ...and run dialog...
+               // dialog will delete itself after closing
                dlg->RunLD();
-            }
+            }            
+            CleanupStack::PopAndDestroy( protocols );
             
-            CleanupStack::Pop( protocols );
          }
          else
          {            
             ASSERT( 0 );
-         }
-         
-         
+         }                 
          break;
       }
       case EAknSoftkeyExit :

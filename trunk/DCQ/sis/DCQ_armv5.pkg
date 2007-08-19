@@ -1,6 +1,6 @@
 ;DCQ_armv5.pkg
 ;Languages
-&EN
+&GE
 
 ; Package header
 #{"DCQ"},(0xA00001FA),1,0,0

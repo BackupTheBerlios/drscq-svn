@@ -1,6 +1,6 @@
 ;DCQ_gcce.pkg
 ;Languages
-&EN
+&GE
 
 ; Header
 #{"DCQ"},(0xA00001FA),1,0,0

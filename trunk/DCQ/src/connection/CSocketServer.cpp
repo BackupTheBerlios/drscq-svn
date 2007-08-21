@@ -58,8 +58,8 @@ void CTimeOutTimer::RunL()
 
 CSocketTransmitter::CSocketTransmitter() 
 : CActive( EPriorityNormal),
+  iByteBuffer( NULL ),
   iTimer( NULL ),
-  iTimeOut( 0 ),
   iTransmitStatus( EWaiting ),
   iObserver( NULL )
 {
@@ -86,24 +86,62 @@ void CSocketTransmitter::ConstructL( RSocket* aSocket )
    ASSERT( iSocket != NULL );
   
    CActiveScheduler::Add( this ); // Add to scheduler
+   iTimer = CTimeOutTimer::NewL( EPriorityMore, (*this ) );
+   iTransmitStatus = EWaiting;
 }
 
 CSocketTransmitter::~CSocketTransmitter()
 {
    Cancel(); // Cancel any request, if outstanding
    
-   if ( iTimer != NULL )
+   delete iByteBuffer;
+   iByteBuffer = NULL;  
+   delete iTimer;
+   iTimer = NULL;
+   
+   if ( iSocket != NULL )
    {
-      delete iTimer;
-      iTimer = NULL;
+      iSocket->Close();
    }
+   iSocket = NULL;
+   
+   iTransmitStatus = EWaiting;
+   iObserver = NULL;
 }
 
-void CSocketTransmitter::Transmit( const TPtrC& aTransmittedData,
-                                   MSocketObserver* aObserver /* = NULL */, 
-                                   TUint aTimeout /* = 0 */ )
+bool CSocketTransmitter::TransmitL( const TPtrC8& aTransmittedData,
+                                    MSocketObserver* aObserver /* = NULL */, 
+                                    TUint aTimeout /* = 0 */ )
 {
+   bool busy = ( ( iByteBuffer != NULL ) || ( iTransmitStatus == ESending ) );
+   bool ok = ( ( iSocket != NULL ) && !busy );
    
+   if ( ok )
+   {               
+      // copy data that should transmitted to buffer on heap
+      ASSERT( iTransmitStatus != ESending );
+      ASSERT( iByteBuffer == NULL );
+      
+      iByteBuffer = static_cast < TDesC8* > ( aTransmittedData.AllocL() );   
+      
+      // register observer
+      iObserver = aObserver;
+      
+      // write buffered data to socket
+      ASSERT( iByteBuffer != NULL );
+      iSocket->Write( *iByteBuffer , iStatus );
+      
+      // start timeout timer, if requested
+      if ( aTimeout > 0 )
+      {
+         iTimer->After( aTimeout );
+      }
+      
+      SetActive();
+      iTransmitStatus = ESending;
+   }
+  
+   return ok;
 }
 
 void CSocketTransmitter::RunL()
@@ -115,14 +153,25 @@ void CSocketTransmitter::RunL()
          // Character has been written to socket
          case ESending:
             {
-                // Cancel TimeOut timer
-                iTimer->Cancel(); 
-                iTransmitStatus = EWaiting;
-                break;
+               // Delete content to transferred
+               delete iByteBuffer;
+               iByteBuffer = NULL;
+               
+               // Cancel TimeOut timer
+               if ( iTimer != NULL )
+               {
+                  iTimer->Cancel(); 
+               }
+               iTransmitStatus = EWaiting;
+               break;
             }
          // Request timed out
          case ETimedOut:
             {
+               // Delete content to transferred
+               delete iByteBuffer;
+               iByteBuffer = NULL;
+               
                if ( iObserver != NULL )
                {
                   iObserver->NotifyError( TSocketObserverErrorCodes::ETimeOut );
@@ -144,7 +193,10 @@ void CSocketTransmitter::RunL()
 
 void CSocketTransmitter::DoCancel()
 {
-   iSocket->CancelWrite();
+   if ( iSocket != NULL )
+   {
+      iSocket->CancelWrite();
+   }
 }
 
 void CSocketTransmitter::TimerExpired()
@@ -160,10 +212,12 @@ void CSocketTransmitter::TimerExpired()
 
 CSocketReceiver::CSocketReceiver() 
 : CActive( EPriorityNormal),
-  iBuffer(),
+  iByteBuffer( NULL ),
+  iSocket( NULL )
   iTimer( NULL ),
   iTimeOut( 0 ),
-  iObserver( 0 )
+  iReceiveState( EWaiting ),
+  iObserver( NULL )
 {
 }
 
@@ -184,6 +238,8 @@ CSocketReceiver* CSocketReceiver::NewL( RSocket* aSocket )
 
 void CSocketReceiver::ConstructL( RSocket* aSocket )
 {
+   iSocket = aSocket;  
+   ASSERT( iSocket != NULL );
    CActiveScheduler::Add( this); // Add to scheduler
 }
 
@@ -198,21 +254,44 @@ CSocketReceiver::~CSocketReceiver()
    }   
 }
 
-void CSocketReceiver::Receive( MSocketObserver& aObserver,
-                               TUint aBlockUntil /* = 0 */,
-                               TUint aTimeout /* = 0 */)
+bool CSocketReceiver::Receive( MSocketObserver& aObserver,
+                               TUint            aBlockUntil /* = 0 */,
+                               TUint            aTimeout /* = 0 */)
 {
-   
+   bool ok
+   if ( !IsActive() )
+   {
+      iSocket->Recv();
+      iSocket->Recv( iByteBuffer, 0, iStatus, aBlockUntil );
+      SetActive();
+   }
 }
 
 void CSocketReceiver::RunL()
 {
-   SetActive(); // Tell scheduler a request is active
+   if ( iStatus == KErrNone )        
+   { 
+      // Character has been read from socket
+      TBuf16<1> Buffer;
+      Buffer.Copy(iBuffer);
+      iConsole->PrintNotify(Buffer);
+     
+//      TInetAddr &ipAddr = GetHostby;
+//      IssueRecvFrom(ipAddr);
+   }
+   else
+   {    // Error: pass it up to user interface   
+      _LIT(KCEchoReadError,"\nCEchoRead error");
+      iConsole->ErrorNotify(KCEchoReadError, iStatus.Int());
+   }   
 }
 
 void CSocketReceiver::DoCancel()
 {
-   
+   if ( iSocket != NULL )
+   {
+      iSocket->CancelRead();
+   }      
 }
 
 ////////////////////////////////////////////////////////////////////////////////////

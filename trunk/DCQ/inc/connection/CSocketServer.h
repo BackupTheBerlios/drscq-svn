@@ -67,9 +67,9 @@ class CSocketTransmitter : public CActive, public MTimeOutNotify
    public:
       // New functions
 
-      void Transmit( const TPtrC& aTransmittedData,
-                     MSocketObserver* aObserver = NULL, 
-                     TUint aTimeout = 0 );
+      bool TransmitL( const TPtrC8&    aTransmittedData,
+                      MSocketObserver* aObserver = NULL, 
+                      TUint            aTimeout = 0 );
 
    private:
       // C++ constructor
@@ -90,15 +90,23 @@ class CSocketTransmitter : public CActive, public MTimeOutNotify
       
    private:
       
+      TDesC8 *         iByteBuffer;
       RSocket*         iSocket;
       CTimeOutTimer*   iTimer;
-      TInt             iTimeOut;
       TTransmitState   iTransmitStatus;
       MSocketObserver* iObserver;
 };
 
+///////////////////////////////////////////////////////////////////////////////////////////
+
 class CSocketReceiver : public CActive, public MTimeOutNotify
 {
+   public:
+      enum TReceiveState 
+      {
+         EReceiving, EWaiting ,ETimedOut
+      };
+   
    public:
       // Cancel and destroy
       ~CSocketReceiver();
@@ -112,9 +120,9 @@ class CSocketReceiver : public CActive, public MTimeOutNotify
    public:
       // New functions
 
-      void Receive( MSocketObserver& aObserver,
-                    TUint aBlockUntil = 0,
-                    TUint aTimeout = 0);     
+      bool Receive( MSocketObserver& aObserver,
+                    TUint            aBlockUntil = 0,
+                    TUint            aTimeout = 0);     
 
    private:
       // C++ constructor
@@ -135,10 +143,11 @@ class CSocketReceiver : public CActive, public MTimeOutNotify
       
    private:
       
+      TDesC8*          iByteBuffer;
       RSocket*         iSocket;
-      TBuf8 < 1 >      iBuffer;
       CTimeOutTimer*   iTimer;
       TInt             iTimeOut;
+      TReceiveState    iReceiveState;
       MSocketObserver* iObserver;
 };
 

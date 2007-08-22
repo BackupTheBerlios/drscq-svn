@@ -69,5 +69,5 @@ SOURCE DCQappview.cpp DCQLoginViewSettings.cpp FileIO.cpp
 SOURCEPATH ..\src\protocols\OSCARv7v8v9
 SOURCE OSCARProtocol.cpp
 SOURCEPATH ..\src\connection
-SOURCE CSocketServer.cpp SocketObserver.cpp
+SOURCE CSocketServer.cpp SocketObserver.cpp TimeOutTimer.cpp CSocketTransmitter.cpp CSocketReceiver.cpp
 

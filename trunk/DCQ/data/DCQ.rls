@@ -63,6 +63,10 @@
    
 #define STRING_r_mult_SocketObserver_Unknown _L("unbekannter Fehler")
 
+#define STRING_r_mult_SocketObserver_Canceled _L("abgebrochen")
+
+#define STRING_r_mult_SocketObserver_Connection_Lost _L("Verbindung verloren")
+
 #endif // LANGUAGE == 03
 
 

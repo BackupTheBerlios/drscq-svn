@@ -20,7 +20,9 @@ struct TSocketObserverErrorCodes
    {
       EErrorNone = 0,
       ETimeOut,
-      EErrorGeneric
+      EErrorGeneric,
+      ECanceled,
+      EConnectionLost
    };
    
    void ToString( TErrorCode aErrorCode, TDes& aString ) const;
@@ -43,7 +45,7 @@ class MSocketObserver : public CBase
        */
       virtual ~MSocketObserver(){}
       
-      virtual void Notify( const TDesC& aReadData ) = 0;
+      virtual void Notify( const TDesC8& aReadData ) = 0;
       
       virtual void NotifyError( TSocketObserverErrorCode aErrCode ) = 0;
 };

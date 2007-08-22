@@ -30,6 +30,16 @@ void TSocketObserverErrorCodes::ToString( TErrorCode aErrorCode, TDes& aString )
          aString = STRING_r_mult_SocketObserver_Generic;
          break;
       }
+      case ECanceled :
+      {
+         aString = STRING_r_mult_SocketObserver_Canceled;
+         break;
+      }
+      case EConnectionLost :
+      {
+         aString = STRING_r_mult_SocketObserver_Connection_Lost;
+         break;
+      }
       default :
       {
          aString = STRING_r_mult_SocketObserver_Unknown;

@@ -19,6 +19,8 @@
 // INCLUDES
 #include <aknview.h>
 
+#include "connection/SocketObserver.h"
+
 // FORWARD DECLARATIONS
 class CDCQLoginViewSettings;
 
@@ -29,7 +31,7 @@ class CDCQLoginViewSettings;
  * An instance of the Application View object for the DCQ
  * example application
  */
-class CDCQLoginView : public CAknView
+class CDCQLoginView : public CAknView, public MSocketObserver
 {
    public:
       // Constructors and destructor
@@ -89,6 +91,10 @@ class CDCQLoginView : public CAknView
    private:
       
       CDCQLoginView();
+      
+      void Notify( const TDesC8& aReadData );
+      
+      void NotifyError( TSocketObserverErrorCode aErrCode );
       
       /**
        * ConstructL.

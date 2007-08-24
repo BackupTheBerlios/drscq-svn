@@ -21,10 +21,12 @@ Copyright (c) 2004 - 2006 Nokia Corporation.
 // INCLUDES
 #include <aknViewAppUi.h>
 
+#include "connection/SocketObserver.h"
 
 // FORWARD DECLARATIONS
 class CDCQLoginView;
 class CDCQView2;
+class CSocketServer;
 
 
 // CLASS DECLARATION
@@ -34,7 +36,7 @@ class CDCQView2;
 * An instance of class CDCQAppUi is the UserInterface part of the AVKON
 * application framework for the DCQ example application
 */
-class CDCQAppUi : public CAknViewAppUi
+class CDCQAppUi : public CAknViewAppUi, public MSocketObserver
     {
 
     public: // Constructors and destructor
@@ -62,12 +64,17 @@ class CDCQAppUi : public CAknViewAppUi
         virtual void HandleResourceChangeL( TInt aType );
         
     private: // Data
+       
+       void Notify( const TDesC8& aReadData );
+       
+       void NotifyError( TSocketObserverErrorCode aErrCode );
 
         /**
         * iLoginView, The application login view
         * Not owned by CDCQAppUi object.
         */
-        CDCQLoginView* iLoginView;
+        CDCQLoginView* iLoginView;        
+        CSocketServer* iSocketServer;
     };
 
 

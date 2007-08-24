@@ -60,7 +60,7 @@ LIBRARY           cone.lib
 LIBRARY           eikcore.lib
 LIBRARY           avkon.lib
 LIBRARY           commonengine.lib estor.lib efsrv.lib eikcoctl.lib eikctl.lib 
-LIBRARY			  bafl.lib
+LIBRARY			  bafl.lib esock.lib insock.lib
 
 
 

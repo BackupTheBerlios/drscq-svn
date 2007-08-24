@@ -30,6 +30,12 @@ enum TDCQCommonCommandIds
    EDCQCommonAbout = 0x101
 };
 
+enum TDCQStaticNotifications
+{
+   EDCQStaticNotifyInfo,
+   EDCQStaticNotifySocketObserver
+};
+
 
 /** Begin Login view **********************************************************/
 

@@ -11,7 +11,7 @@
 #include "connection/SocketObserver.h"
 #include "DCQ.rls"
 
-void TSocketObserverErrorCodes::ToString( TErrorCode aErrorCode, TDes& aString ) const
+void TSocketObserverErrorCodes::ToString( TErrorCode aErrorCode, TDes& aString )
 {
    switch( aErrorCode )
    {         
@@ -35,9 +35,24 @@ void TSocketObserverErrorCodes::ToString( TErrorCode aErrorCode, TDes& aString )
          aString = STRING_r_mult_SocketObserver_Canceled;
          break;
       }
+      case EConnecting :
+      {
+         aString = STRING_r_mult_SocketObserver_Connecting;
+         break;
+      }
+      case EConnectionFailed :
+      {
+         aString = STRING_r_mult_SocketObserver_Connection_Failed;
+         break;
+      }
       case EConnectionLost :
       {
          aString = STRING_r_mult_SocketObserver_Connection_Lost;
+         break;
+      }
+      case EDNSFailure :
+      {
+         aString = STRING_r_mult_SocketObserver_DNS_Failure;
          break;
       }
       default :

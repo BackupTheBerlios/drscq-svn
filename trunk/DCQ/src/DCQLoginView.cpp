@@ -38,14 +38,14 @@ CDCQLoginView::CDCQLoginView()
 CDCQLoginView* CDCQLoginView::NewL()
 {
    CDCQLoginView* self = CDCQLoginView::NewLC();
-   CleanupStack::Pop( self);
+   CleanupStack::Pop( self );
    return self;
 }
 
 CDCQLoginView* CDCQLoginView::NewLC()
 {
    CDCQLoginView* self = new ( ELeave ) CDCQLoginView();
-   CleanupStack::PushL( self);
+   CleanupStack::PushL( self );
    self->ConstructL();
    return self;
 }
@@ -111,11 +111,7 @@ void CDCQLoginView::HandleCommandL( TInt aCommand)
 {
    // Try to find the given command in list of valid commands
    switch( aCommand )
-   {
-      case EDCQLoginViewDoLogin :
-      {            
-         break;
-      }
+   {    
       case EDCQLoginViewNewAccount :
       {
          break;
@@ -160,16 +156,11 @@ void CDCQLoginView::HandleCommandL( TInt aCommand)
          }                 
          break;
       }
-      case EAknSoftkeyExit :
-      {
-         // Exit will be handled by AppUi
-         AppUi()->HandleCommandL( aCommand );
-         break;         
-      }
       default:
       {
-         // If nothing found, we do nothing
-         break;
+         // If nothing found, we give it up
+         // to the next handler
+         AppUi()->HandleCommandL( aCommand );
       }
    }
   
@@ -186,6 +177,29 @@ void CDCQLoginView::HandleSizeChange( TInt aType)
          iLoginSettings->SetRect(rect);
       }
    }
+}
+
+void CDCQLoginView::Notify( const TDesC8& /* aReadData */ )
+{
+
+}
+
+void CDCQLoginView::NotifyError( TSocketObserverErrorCode aErrCode )
+{
+   CAknStaticNoteDialog* dlg = new ( ELeave ) CAknStaticNoteDialog;
+   
+   // ...and prepare infos...
+   //CleanupStack::PushL( dlg );
+   dlg->PrepareLC( R_DCQ_INFO_STATIC_NOTIFICATION /*R_DCQ_SERVEROBSERVER_STATIC_NOTIFICATION*/ );
+   dlg->SetNumberOfBorders( 4 );   
+   TBuf < 255 > buffer;
+   TSocketObserverErrorCodes::ToString( aErrCode, static_cast < TDes& > ( buffer ) );
+   dlg->SetTextL( buffer );
+   //CleanupStack::Pop( dlg );
+   
+   // ...and run dialog...
+   // dialog will delete itself after closing
+   dlg->RunLD();
 }
 
 // End of File

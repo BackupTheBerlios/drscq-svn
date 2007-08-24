@@ -29,6 +29,7 @@ class CSocketServer : public CActive, public MTimeOutNotify
          EIdle,
          EComplete, EConnecting, EConnected,
          ELookingUp, ELookUpFailed, EConnectFailed,
+         ETimedOut
       };
       
    public:
@@ -36,30 +37,30 @@ class CSocketServer : public CActive, public MTimeOutNotify
       ~CSocketServer();
 
       // Two-phased constructor.
-      static CSocketServer* NewL();
+      static CSocketServer* NewL( MSocketObserver* aObserver = NULL );
 
       // Two-phased constructor.
-      static CSocketServer* NewLC();
+      static CSocketServer* NewLC( MSocketObserver* aObserver = NULL );
 
    public:
       // New functions
 
-      void OpenL( MSocketObserver* aObserver = NULL );
+      void OpenL();
 
-      void Transmit( const TPtrC&      aTransmittedData, 
-                     MSocketObserver*  aObserver = NULL,
-                     TUint             aTimeout = 0 );
+      void TransmitL( const TPtrC&      aTransmittedData, 
+                      MSocketObserver*  aObserver = NULL,
+                      TUint             aTimeout = 0 );
 
-      void Receive( MSocketObserver&   aObserver,
-                    TUint              aBlockUntil = 0,
-                    TUint              aTimeout = 0 );
+      void ReceiveL( MSocketObserver&   aObserver,
+                     TUint              aBlockUntil = 0,
+                     TUint              aTimeout = 0 );
       
-      void ConnectL( TUint32           aAddr, 
-                     MSocketObserver*  aObserver = NULL,
+      void ConnectL( TUint32           aAddr,
+                     TUint16           aPort,
                      TUint             aTimeout = 0 );
       
       void ConnectL( const TDesC&      aServerName,
-                     MSocketObserver*  aObserver = NULL,
+                     TUint16           aPort,
                      TUint             aTimeout = 0 );
 
       void Close();
@@ -69,7 +70,7 @@ class CSocketServer : public CActive, public MTimeOutNotify
       CSocketServer();
 
       // Second-phase constructor
-      void ConstructL();
+      void ConstructL( MSocketObserver* aObserver );
 
    private:
       // From CActive
@@ -86,6 +87,7 @@ class CSocketServer : public CActive, public MTimeOutNotify
       TSocketServerState   iServerStatus;
       CSocketTransmitter*  iTransmitter;
       CSocketReceiver*     iReceiver;
+      MSocketObserver*     iObserver;
       TUint                iTimeout;
       RSocket              iSocket;
       RSocketServ          iSocketServ;
@@ -94,6 +96,7 @@ class CSocketServer : public CActive, public MTimeOutNotify
       TNameRecord          iNameRecord;
       CTimeOutTimer*       iTimer;
       TInetAddr            iAddress;
+      TUint16              iPort;
 };
 
 #endif // CSOCKETSERVER_H

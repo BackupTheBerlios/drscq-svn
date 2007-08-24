@@ -15,10 +15,15 @@
 
 // INCLUDE FILES
 #include <e32std.h>
+#include <DCQ.rsg>
+#include <aknstaticnotedialog.h> 
 
+#include "DCQ.hrh"
 #include "DCQ.pan"
 #include "DCQAppUi.h"
 #include "DCQLoginView.h"
+
+#include "connection/CSocketServer.h"
 
 // ========================= MEMBER FUNCTIONS ==================================
 
@@ -30,12 +35,13 @@
 void CDCQAppUi::ConstructL()
 {
    // Initialise app UI
-   BaseConstructL(EAknEnableSkin);
+   BaseConstructL( EAknEnableSkin );
    
    iLoginView = CDCQLoginView::NewL();
-   AddViewL(iLoginView);
+   AddViewL( iLoginView );
    SetDefaultViewL( *iLoginView );
    
+   iSocketServer = CSocketServer::NewL( iLoginView );   
 }
 
 // -----------------------------------------------------------------------------
@@ -43,17 +49,28 @@ void CDCQAppUi::ConstructL()
 // Takes care of command handling.
 // -----------------------------------------------------------------------------
 //
-void CDCQAppUi::HandleCommandL(TInt aCommand)
+void CDCQAppUi::HandleCommandL( TInt aCommand )
 {
-   switch ( aCommand)
+   switch ( aCommand )
    {
+      case EDCQLoginViewDoLogin :
+      {        
+         iSocketServer->OpenL();
+         iSocketServer->ConnectL( _L("www.google.de"), 80 );
+         break;
+      }
       case EEikCmdExit:
       case EAknSoftkeyExit:
+      {
+         iSocketServer->Close();
          Exit();
          break;
+      }         
       default:
-         Panic(EDCQBasicUi);
+      {
          break;
+      }
+         
    }
 }
 
@@ -62,14 +79,37 @@ void CDCQAppUi::HandleCommandL(TInt aCommand)
 // Called by framework when layout is changed.
 // -----------------------------------------------------------------------------
 //
-void CDCQAppUi::HandleResourceChangeL( TInt aType)
+void CDCQAppUi::HandleResourceChangeL( TInt aType )
 {
-   CAknAppUi::HandleResourceChangeL( aType);
+   CAknAppUi::HandleResourceChangeL( aType );
    
-   if ( aType == KEikDynamicLayoutVariantSwitch)
+   if ( aType == KEikDynamicLayoutVariantSwitch )
    {
-      iLoginView->HandleSizeChange(aType);
+      iLoginView->HandleSizeChange( aType );
    }
 }
 
+
+void CDCQAppUi::Notify( const TDesC8& /* aReadData */ )
+{
+
+}
+
+void CDCQAppUi::NotifyError( TSocketObserverErrorCode aErrCode )
+{
+   CAknStaticNoteDialog* dlg = new ( ELeave ) CAknStaticNoteDialog;
+   
+   // ...and prepare infos...
+   CleanupStack::PushL( dlg );
+   dlg->PrepareLC( R_DCQ_SERVEROBSERVER_STATIC_NOTIFICATION );
+   dlg->SetNumberOfBorders( 4 );   
+   TBuf < 255 > buffer;
+   TSocketObserverErrorCodes::ToString( aErrCode, static_cast < TDes& > ( buffer ) );
+   dlg->SetTextL( buffer );
+   CleanupStack::Pop( dlg );
+   
+   // ...and run dialog...
+   // dialog will delete itself after closing
+   dlg->RunLD();
+}
 // End of File

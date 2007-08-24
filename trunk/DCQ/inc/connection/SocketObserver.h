@@ -21,11 +21,14 @@ struct TSocketObserverErrorCodes
       EErrorNone = 0,
       ETimeOut,
       EErrorGeneric,
-      ECanceled,
-      EConnectionLost
+      ECanceled,      
+      EConnecting,
+      EConnectionFailed,
+      EConnectionLost,
+      EDNSFailure,                  
    };
    
-   void ToString( TErrorCode aErrorCode, TDes& aString ) const;
+   static void ToString( TErrorCode aErrorCode, TDes& aString );
 };
 
 typedef TSocketObserverErrorCodes::TErrorCode TSocketObserverErrorCode;
@@ -35,7 +38,7 @@ typedef TSocketObserverErrorCodes::TErrorCode TSocketObserverErrorCode;
  *  MSocketObserver
  * 
  */
-class MSocketObserver : public CBase
+class MSocketObserver
 {
    public:
       // Constructors and destructor

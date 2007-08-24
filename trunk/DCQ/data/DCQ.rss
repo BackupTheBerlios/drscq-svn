@@ -267,11 +267,38 @@ RESOURCE DIALOG r_DCQ_info_static_notification
       DLG_LINE
       {
          type = EAknCtNote;
-         id = EDCQCommonAbout;
+         id = EDCQStaticNotifyInfo;
          control = AVKON_NOTE
                    {
                      layout = ETextualNotificationLayout;
                      singular_label = STRING_r_mult_info;                  
+                   };
+      }
+   };
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// -----------------------------------------------------------------------------
+//
+//    r_DCQ_ServerObserver_static_notification
+//    Define static notification showing actual notification from SocketServer
+//
+// -----------------------------------------------------------------------------
+//
+RESOURCE DIALOG r_DCQ_ServerObserver_static_notification
+{
+   flags = EEikDialogFlagNoDrag | EEikDialogFlagNoTitleBar | EEikDialogFlagCbaButtons | EEikDialogFlagNoShadow;   
+   buttons = R_AVKON_SOFTKEYS_CLOSE;
+   items =
+   {
+      DLG_LINE
+      {
+         type = EAknCtNote;
+         id = EDCQStaticNotifySocketObserver;
+         control = AVKON_NOTE
+                   {
+                     layout = ETextualNotificationLayout;
+                     singular_label = STRING_r_mult_socket_observer_static_notify;                  
                    };
       }
    };

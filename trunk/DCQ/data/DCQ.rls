@@ -54,6 +54,9 @@
 /* Info static notification ***********************************************************************/
 #define STRING_r_mult_info "Info:\nDCQ Version 'TODO'\nProtokolle: %d\n"
 
+/* SocketObserver static notification ***********************************************************************/
+#define STRING_r_mult_socket_observer_static_notify "Verbindungsinfo:\n"
+
 /* SocketObserver error codes ********************************************************************/
 #define STRING_r_mult_SocketObserver_ErrorNone _L("kein Fehler")
    
@@ -63,9 +66,15 @@
    
 #define STRING_r_mult_SocketObserver_Unknown _L("unbekannter Fehler")
 
-#define STRING_r_mult_SocketObserver_Canceled _L("abgebrochen")
+#define STRING_r_mult_SocketObserver_Canceled _L("Abgebrochen")
+
+#define STRING_r_mult_SocketObserver_Connecting _L("Verbinde")
+
+#define STRING_r_mult_SocketObserver_Connection_Failed _L("Verbindung fehlgeschlagen")
 
 #define STRING_r_mult_SocketObserver_Connection_Lost _L("Verbindung verloren")
+
+#define STRING_r_mult_SocketObserver_DNS_Failure _L("DNS look-up fehlgeschlagen")
 
 #endif // LANGUAGE == 03
 

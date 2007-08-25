@@ -17,12 +17,6 @@
 TARGET            DCQ.exe
 TARGETTYPE        exe
 UID               0x0 0xA00001FA
-EPOCSTACKSIZE     0x8000 
-SECUREID		  0xA00001FA
-LANG              03
-VENDORID          0
-CAPABILITY		  NONE
-
 TARGETPATH        \system\apps\DCQ
 
 SOURCEPATH        ..\src
@@ -35,19 +29,17 @@ SOURCE            DCQLoginView.cpp
 SOURCEPATH        ..\data
 
 START RESOURCE DCQ.rss
-	HEADER
-	TARGETPATH \\resource\apps
+HEADER
+TARGETPATH resource\apps
 END
 
-#if 0
 START RESOURCE    DCQ_reg.rss
 #ifdef WINSCW
-TARGETPATH 	      "\\private\\10003a3f\\apps"
+TARGETPATH 	      \private\10003a3f\apps
 #else
-TARGETPATH 	      "\\private\\10003a3f\\import\\apps"
+TARGETPATH 	      \private\10003a3f\import\apps
 #endif
 END
-#endif
 
 
 USERINCLUDE       ..\inc ..\data
@@ -61,7 +53,11 @@ LIBRARY           avkon.lib
 LIBRARY           commonengine.lib estor.lib efsrv.lib eikcoctl.lib eikctl.lib 
 LIBRARY			  bafl.lib esock.lib insock.lib
 
+LANG 			  SC
 
+CAPABILITY 		  none
+
+VENDORID		  0
 
 SOURCEPATH ..\src
 SOURCE DCQappview.cpp DCQLoginViewSettings.cpp FileIO.cpp
@@ -71,3 +67,5 @@ SOURCEPATH ..\src\connection
 SOURCE CSocketServer.cpp CTimeOutTimer.cpp CSocketTransmitter.cpp CSocketReceiver.cpp
 SOURCEPATH ..\src\clients
 SOURCE CICQClient.cpp
+
+EPOCSTACKSIZE 0x8000

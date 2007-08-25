@@ -30,7 +30,7 @@
 CDCQAppUi::CDCQAppUi()
 : iLoginView( NULL ),
   iICQClient( NULL ),
-  iWaitNoteWrapper( NULL ),
+  iWaitDialog( NULL ),
   iIdle( true )
 { 
 }
@@ -44,8 +44,7 @@ CDCQAppUi::~CDCQAppUi()
   delete iICQClient;
   iICQClient = NULL;
   
-  delete iWaitNoteWrapper;
-  iWaitNoteWrapper = NULL;
+  iWaitDialog = NULL;
 }
 
 // -----------------------------------------------------------------------------
@@ -82,12 +81,13 @@ void CDCQAppUi::HandleCommandL( TInt aCommand )
       case EDCQLoginViewDoLogin :
       {   
          if ( iICQClient != NULL )
-         {
-            iICQClient->ConnectL( _L("www.google.de"), 80 );
+         {            
+            ASSERT( iWaitDialog == NULL );
+            iWaitDialog = new (ELeave) CAknWaitDialog ( REINTERPRET_CAST ( CEikDialog**, &iWaitDialog ), ETrue );
+            iWaitDialog->SetCallback( this );            
+            iWaitDialog->ExecuteLD ( R_DCQ_WAIT_NOTE_CONNECTING );
             
-            ASSERT( iWaitNoteWrapper == NULL );
-            iWaitNoteWrapper = CAknWaitNoteWrapper::NewL();
-            iWaitNoteWrapper->ExecuteL( R_DCQ_WAIT_NOTE_CONNECTING, *this );
+            iICQClient->ConnectL( _L("www.google.de"), 80 );                       
          }
          break;
       }
@@ -127,22 +127,14 @@ void CDCQAppUi::DialogDismissedL( TInt /* aButton */ )
    {
       iICQClient->Cancel();
    }
+   
+   if ( iWaitDialog != NULL )
+   {
+      iWaitDialog->SetCallback( NULL );
+      iWaitDialog->ProcessFinishedL();
+      iWaitDialog = NULL;
+   }
 }
-
-
-TBool CDCQAppUi::IsProcessDone() const
-{
-   return iIdle;
-}
-
-void CDCQAppUi::ProcessFinished()
-{
-   delete iWaitNoteWrapper;
-   iWaitNoteWrapper = NULL;
-   iIdle = true;
-}
-
-void CDCQAppUi::StepL(){}
 
 
 void CDCQAppUi::NotifyProgress( TProgressType aProgressType, TUint8 /* aPercentage */ )
@@ -166,6 +158,13 @@ void CDCQAppUi::NotifyError( TErrorObserverErrorType aErrorType, TErrorObserverI
 {
    ASSERT( iIdle );
    
+   if ( iWaitDialog != NULL )
+   {
+      iWaitDialog->SetCallback( NULL );
+      TRAP_IGNORE( iWaitDialog->ProcessFinishedL() );
+      iWaitDialog = NULL;
+   }
+   
    bool aMustNotify = ( aInfoType != TErrorObserverInfoTypes::ESuccessful );
    
    if ( aMustNotify )
@@ -177,6 +176,18 @@ void CDCQAppUi::NotifyError( TErrorObserverErrorType aErrorType, TErrorObserverI
       {
          case TErrorObserverErrorTypes::EErrorCritical :
          {
+            CAknStaticNoteDialog* dlg = new ( ELeave ) CAknStaticNoteDialog;
+            
+            // ...and prepare infos...
+            CleanupStack::PushL( dlg );
+            dlg->PrepareLC( R_DCQ_NOTE_ERROR_CRITICAL );
+            dlg->SetNumberOfBorders( 4 );
+            dlg->SetTextL( buffer );
+            CleanupStack::Pop( dlg );
+            
+            // ...and run dialog...
+            // dialog will delete itself after closing
+            dlg->RunLD();
             break;
          }
          case TErrorObserverErrorTypes::EErrorWarning :

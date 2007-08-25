@@ -68,6 +68,8 @@ class CSocketServer : public CActive, public MTimeOutObserver
                      MErrorObserver*   aObserver = NULL );
 
       void Close();
+      
+      bool IsConnected() const;
 
    private:
       // C++ constructor
@@ -75,6 +77,9 @@ class CSocketServer : public CActive, public MTimeOutObserver
 
       // Second-phase constructor
       void ConstructL();
+      
+      void ConnectResolvedL( TUint32           aAddr,
+                             TUint16           aPort );        
 
    private:
       // From CActive

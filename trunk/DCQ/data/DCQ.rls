@@ -58,4 +58,6 @@ rls_string STRING_r_mult_info "Info:\nDCQ Version 'TODO'\nProtokolle: %d\n"
 rls_string STRING_r_mult_wait_note_connecting "Verbinde..."
 
 
+
+
 #endif // LANGUAGE == 03

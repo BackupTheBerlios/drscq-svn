@@ -92,12 +92,12 @@ bool CSocketReceiver::ReceiveL( MSocketObserver& aObserver,
          iMultiByteBuffer = HBufC8::NewMaxL( aBlockUntil ); 
          TPtr8 aMultiByteBufferDes = iMultiByteBuffer->Des();
          
-         iSocket->Recv( static_cast < TDes8 > ( aMultiByteBufferDes ), 0, iStatus );               
+         iSocket->Recv( static_cast < TDes8& > ( aMultiByteBufferDes ), 0, iStatus );               
       }
       else
       {
          // if not so, only read one byte
-         iSocket->Recv( static_cast < TDes8 > ( iSingleByteBuffer ), 0, iStatus );
+         iSocket->Recv( static_cast < TDes8& > ( iSingleByteBuffer ), 0, iStatus );
       }
 
       // start timeout timer, if requested

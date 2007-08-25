@@ -20,7 +20,7 @@ Copyright (c) 2004 - 2006 Nokia Corporation.
 
 // INCLUDES
 #include <aknViewAppUi.h>
-#include <aknwaitnotewrapper.h> 
+#include <aknwaitdialog.h>
 
 #include "observer/MProgressObserver.h"
 #include "observer/MErrorObserver.h"
@@ -41,7 +41,7 @@ class CICQClient;
 class CDCQAppUi : public CAknViewAppUi, 
                   public MProgressObserver, 
                   public MErrorObserver,
-                  public MAknBackgroundProcess
+                  public MProgressDialogCallback
 {
 
     public: // Constructors and destructor
@@ -78,22 +78,17 @@ class CDCQAppUi : public CAknViewAppUi,
        
        void NotifyError( TErrorObserverErrorType aErrorType, TErrorObserverInfoType aInfoType );
        
-       void DialogDismissedL( TInt aButton );  
-       
-       void ProcessFinished();
-       
-       TBool IsProcessDone() const;
-       
-       void StepL(); 
+       void DialogDismissedL( TInt aButton );         
                                                                               
         /**
         * iLoginView, The application login view
         * Not owned by CDCQAppUi object.
-        */
+        */       
         CDCQLoginView*       iLoginView;        
         CICQClient*          iICQClient;                
-        CAknWaitNoteWrapper* iWaitNoteWrapper;
+        CAknWaitDialog*      iWaitDialog;
         bool                 iIdle;
+        
 };
 
 

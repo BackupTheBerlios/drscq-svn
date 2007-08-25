@@ -47,8 +47,7 @@ class CICQClient : public CBase
       
       
       void RegisterProgressObserver( MProgressObserver* aProgressObserver );
-      
-      
+           
       void RegisterErrorObsrerver( MErrorObserver* aErrorObserer );
       
       void ConnectL( TUint32 aAddr, TUint16 aPort );
@@ -58,6 +57,8 @@ class CICQClient : public CBase
       void Cancel();
       
       void Shutdown();
+      
+      bool IsConnected() const;
    
    private:
    
@@ -76,7 +77,7 @@ class CICQClient : public CBase
       MProgressObserver*        iProgressObserver;
       MErrorObserver*           iErrorObserver;
       CSocketServer*            iSocketServer;
-      Protocol::COSCARProtocol* iProtocol;
+      Protocol::COSCARProtocol* iProtocol;      
 };
 
 #endif // CICQCLIENT_H

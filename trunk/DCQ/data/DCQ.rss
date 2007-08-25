@@ -254,7 +254,7 @@ RESOURCE POPUP_SETTING_LIST r_remember_pass_popup_setting_list
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // -----------------------------------------------------------------------------
 //
-//    r_DCQ_wait_note
+//    r_DCQ_wait_wait_note_connecting
 //    Define a wait notification when connecting
 //
 // -----------------------------------------------------------------------------
@@ -276,7 +276,36 @@ RESOURCE DIALOG r_DCQ_wait_note_connecting
                       //imagefile = "\\system\\data\\avkon.mbm";
                       //imageid = EMbmAvkonQgn_note_progress;
                       //imagemask = EMbmAvkonQgn_note_progress_mask;
-                      //animation = R_QGN_GRAF_WAIT_BAR_ANIM;
+                      animation = R_QGN_GRAF_WAIT_BAR_ANIM;
+                   };
+      }
+   };
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// -----------------------------------------------------------------------------
+//
+//    r_DCQ_note_error_critical
+//    Define a notification for critical errors
+//
+// -----------------------------------------------------------------------------
+//
+RESOURCE DIALOG r_DCQ_note_error_critical
+{
+   flags = EAknErrorNoteFlags;
+   buttons = R_AVKON_SOFTKEYS_CLOSE;
+   items =
+   {
+      DLG_LINE
+      {
+         type = EAknCtNote;
+         id = EDCQCriticalErrorNotify;
+         control = AVKON_NOTE
+                   {
+                     layout = ENoteWithImageLayout;
+                     //imagefile = "z:\\system\\data\\avkon.mbm";
+                     //imageid = EMbmAvkonQgn_note_error;
+                     //imagemask = EMbmAvkonQgn_note_error_mask;
+                     singular_label = "TO BE SET BY APP";                  
                    };
       }
    };
@@ -291,7 +320,7 @@ RESOURCE DIALOG r_DCQ_wait_note_connecting
 //
 RESOURCE DIALOG r_DCQ_info_static_notification
 {
-   flags = EEikDialogFlagNoDrag | EEikDialogFlagNoTitleBar | EEikDialogFlagCbaButtons | EEikDialogFlagNoShadow;   
+   flags = EAknPermanentNoteFlags;   
    buttons = R_AVKON_SOFTKEYS_CLOSE;
    items =
    {

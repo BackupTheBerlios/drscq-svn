@@ -32,7 +32,8 @@ enum TDCQCommonCommandIds
 
 enum TDCQStaticNotifications
 {
-   EDCQStaticNotifyInfo = 0x401
+   EDCQStaticNotifyInfo = 0x401,
+   EDCQCriticalErrorNotify
 };
 
 enum TDCQWaitNotes

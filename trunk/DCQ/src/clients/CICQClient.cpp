@@ -15,7 +15,7 @@
 #include "connection/CSocketServer.h"
 #include "protocols/OSCARv7v8v9/OSCARProtocol.h"
 
-static const TUint TIMEOUT_CONNECT_MS = 10000; // 10 sec
+static const TUint TIMEOUT_CONNECT_MS = 10000000; // 10 sec
 
 CICQClient::CICQClient()
 : iProgressObserver( NULL ),
@@ -93,6 +93,11 @@ void CICQClient::ConnectL( TUint32 aAddr, TUint16 aPort )
 void CICQClient::ConnectL( const TDesC& aServerName, TUint16 aPort )
 {
    iSocketServer->ConnectL( aServerName, aPort, TIMEOUT_CONNECT_MS, iErrorObserver );
+}
+
+bool CICQClient::IsConnected() const
+{
+   return iSocketServer->IsConnected();
 }
 
 void CICQClient::Cancel()

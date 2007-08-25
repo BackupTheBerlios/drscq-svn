@@ -57,14 +57,33 @@ namespace Protocol {
       return TPtrC( K_PROTOCOL_DESC );
    }
    
-   bool COSCARProtocol::Login()
-   {
-      return false;
+   void COSCARProtocol::OpenL()
+   {   
    }
    
-   bool COSCARProtocol::Logout()
+   void COSCARProtocol::LoginL()
    {
-      return false;
    }
    
+   void COSCARProtocol::LogoutL()
+   {
+   }
+   
+   void COSCARProtocol::Cancel()
+   {      
+   }
+   
+   void COSCARProtocol::Close()
+   {      
+   }
+   
+   void COSCARProtocol::NotifySuccess()
+   {
+      
+   }
+   
+   void COSCARProtocol::NotifyError( TSocketObserverErrorCode aErrCode )
+   {
+      
+   }
 } // end namespace Protocol

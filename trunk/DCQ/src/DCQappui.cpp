@@ -24,8 +24,29 @@
 #include "DCQLoginView.h"
 
 #include "connection/CSocketServer.h"
+#include "clients/CICQClient.h"
 
 // ========================= MEMBER FUNCTIONS ==================================
+CDCQAppUi::CDCQAppUi()
+: iLoginView( NULL ),
+  iICQClient( NULL ),
+  iWaitNoteWrapper( NULL ),
+  iIdle( true )
+{ 
+}
+
+CDCQAppUi::~CDCQAppUi()
+{  
+  if ( iICQClient != NULL )
+  {
+     iICQClient->Shutdown();
+  }
+  delete iICQClient;
+  iICQClient = NULL;
+  
+  delete iWaitNoteWrapper;
+  iWaitNoteWrapper = NULL;
+}
 
 // -----------------------------------------------------------------------------
 // CDCQAppUi::ConstructL()
@@ -38,10 +59,15 @@ void CDCQAppUi::ConstructL()
    BaseConstructL( EAknEnableSkin );
    
    iLoginView = CDCQLoginView::NewL();
+   CleanupStack::PushL( iLoginView );
+   
    AddViewL( iLoginView );
    SetDefaultViewL( *iLoginView );
    
-   iSocketServer = CSocketServer::NewL( iLoginView );   
+   iICQClient = CICQClient::NewL();
+   iICQClient->RegisterErrorObsrerver( this );
+   
+   CleanupStack::Pop( iLoginView );   
 }
 
 // -----------------------------------------------------------------------------
@@ -54,15 +80,20 @@ void CDCQAppUi::HandleCommandL( TInt aCommand )
    switch ( aCommand )
    {
       case EDCQLoginViewDoLogin :
-      {        
-         iSocketServer->OpenL();
-         iSocketServer->ConnectL( _L("www.google.de"), 80 );
+      {   
+         if ( iICQClient != NULL )
+         {
+            iICQClient->ConnectL( _L("www.google.de"), 80 );
+            
+            ASSERT( iWaitNoteWrapper == NULL );
+            iWaitNoteWrapper = CAknWaitNoteWrapper::NewL();
+            iWaitNoteWrapper->ExecuteL( R_DCQ_WAIT_NOTE_CONNECTING, *this );
+         }
          break;
       }
       case EEikCmdExit:
       case EAknSoftkeyExit:
       {
-         iSocketServer->Close();
          Exit();
          break;
       }         
@@ -90,26 +121,80 @@ void CDCQAppUi::HandleResourceChangeL( TInt aType )
 }
 
 
-void CDCQAppUi::Notify( const TDesC8& /* aReadData */ )
+void CDCQAppUi::DialogDismissedL( TInt /* aButton */ )
 {
-
+   if ( iICQClient != NULL )
+   {
+      iICQClient->Cancel();
+   }
 }
 
-void CDCQAppUi::NotifyError( TSocketObserverErrorCode aErrCode )
+
+TBool CDCQAppUi::IsProcessDone() const
 {
-   CAknStaticNoteDialog* dlg = new ( ELeave ) CAknStaticNoteDialog;
+   return iIdle;
+}
+
+void CDCQAppUi::ProcessFinished()
+{
+   delete iWaitNoteWrapper;
+   iWaitNoteWrapper = NULL;
+   iIdle = true;
+}
+
+void CDCQAppUi::StepL(){}
+
+
+void CDCQAppUi::NotifyProgress( TProgressType aProgressType, TUint8 /* aPercentage */ )
+{
+   ASSERT( iIdle );
+   switch ( aProgressType )
+   {
+      case TProgressTypes::EProgressGauge :
+      {
+         break;
+      }
+      case TProgressTypes::EProgressWait :
+      {
+         break;
+      }
+      default : break;
+   }
+}
+
+void CDCQAppUi::NotifyError( TErrorObserverErrorType aErrorType, TErrorObserverInfoType aInfoType )
+{
+   ASSERT( iIdle );
    
-   // ...and prepare infos...
-   CleanupStack::PushL( dlg );
-   dlg->PrepareLC( R_DCQ_SERVEROBSERVER_STATIC_NOTIFICATION );
-   dlg->SetNumberOfBorders( 4 );   
-   TBuf < 255 > buffer;
-   TSocketObserverErrorCodes::ToString( aErrCode, static_cast < TDes& > ( buffer ) );
-   dlg->SetTextL( buffer );
-   CleanupStack::Pop( dlg );
+   bool aMustNotify = ( aInfoType != TErrorObserverInfoTypes::ESuccessful );
    
-   // ...and run dialog...
-   // dialog will delete itself after closing
-   dlg->RunLD();
+   if ( aMustNotify )
+   {
+      TBuf < 255 > buffer;
+      TErrorObserverInfoTypes::ToString( aInfoType, static_cast < TDes& > ( buffer ) );
+      
+      switch ( aErrorType )
+      {
+         case TErrorObserverErrorTypes::EErrorCritical :
+         {
+            break;
+         }
+         case TErrorObserverErrorTypes::EErrorWarning :
+         {
+            break;
+         }
+         case TErrorObserverErrorTypes::EErrorInfo :
+         {
+            break;
+         }
+         case TErrorObserverErrorTypes::EErrorDebug :
+         {
+            break;
+         }
+         default : break;
+      }
+   }
+   
+   iIdle = true;   
 }
 // End of File

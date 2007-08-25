@@ -20,13 +20,15 @@ Copyright (c) 2004 - 2006 Nokia Corporation.
 
 // INCLUDES
 #include <aknViewAppUi.h>
+#include <aknwaitnotewrapper.h> 
 
-#include "connection/SocketObserver.h"
+#include "observer/MProgressObserver.h"
+#include "observer/MErrorObserver.h"
 
 // FORWARD DECLARATIONS
 class CDCQLoginView;
 class CDCQView2;
-class CSocketServer;
+class CICQClient;
 
 
 // CLASS DECLARATION
@@ -36,11 +38,18 @@ class CSocketServer;
 * An instance of class CDCQAppUi is the UserInterface part of the AVKON
 * application framework for the DCQ example application
 */
-class CDCQAppUi : public CAknViewAppUi, public MSocketObserver
-    {
+class CDCQAppUi : public CAknViewAppUi, 
+                  public MProgressObserver, 
+                  public MErrorObserver,
+                  public MAknBackgroundProcess
+{
 
     public: // Constructors and destructor
 
+       CDCQAppUi();
+              
+       ~CDCQAppUi();
+       
         /**
         * ConstructL.
         * 2nd phase constructor.
@@ -65,17 +74,27 @@ class CDCQAppUi : public CAknViewAppUi, public MSocketObserver
         
     private: // Data
        
-       void Notify( const TDesC8& aReadData );
+       void NotifyProgress( TProgressType aProgressType, TUint8 aPercentage );
        
-       void NotifyError( TSocketObserverErrorCode aErrCode );
-
+       void NotifyError( TErrorObserverErrorType aErrorType, TErrorObserverInfoType aInfoType );
+       
+       void DialogDismissedL( TInt aButton );  
+       
+       void ProcessFinished();
+       
+       TBool IsProcessDone() const;
+       
+       void StepL(); 
+                                                                              
         /**
         * iLoginView, The application login view
         * Not owned by CDCQAppUi object.
         */
-        CDCQLoginView* iLoginView;        
-        CSocketServer* iSocketServer;
-    };
+        CDCQLoginView*       iLoginView;        
+        CICQClient*          iICQClient;                
+        CAknWaitNoteWrapper* iWaitNoteWrapper;
+        bool                 iIdle;
+};
 
 
 #endif // __DCQ_APPUI_H__

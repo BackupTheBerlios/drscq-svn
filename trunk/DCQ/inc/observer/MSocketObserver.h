@@ -1,6 +1,6 @@
 /*
  ============================================================================
- Name		    : SocketObserver.h
+ Name		    : MSocketObserver.h
  Author	    : Ronny Röhricht
  Version	    :
  Copyright   : (C) Ronny Röhricht 2007
@@ -12,7 +12,7 @@
 #define MSOCKETOBSERVER_H
 
 // INCLUDES
-#include <e32base.h>
+#include <e32cmn.h>
 
 struct TSocketObserverErrorCodes
 {
@@ -22,13 +22,8 @@ struct TSocketObserverErrorCodes
       ETimeOut,
       EErrorGeneric,
       ECanceled,      
-      EConnecting,
-      EConnectionFailed,
-      EConnectionLost,
-      EDNSFailure,                  
+      EConnectionLost,                
    };
-   
-   static void ToString( TErrorCode aErrorCode, TDes& aString );
 };
 
 typedef TSocketObserverErrorCodes::TErrorCode TSocketObserverErrorCode;
@@ -48,7 +43,7 @@ class MSocketObserver
        */
       virtual ~MSocketObserver(){}
       
-      virtual void Notify( const TDesC8& aReadData ) = 0;
+      virtual void NotifySuccess() = 0;
       
       virtual void NotifyError( TSocketObserverErrorCode aErrCode ) = 0;
 };

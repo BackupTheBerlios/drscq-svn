@@ -15,13 +15,15 @@
 #include <in_sock.h>
 #include <nifman.h>
 
-#include "connection/TimeOutTimer.h"
+#include "connection/CTimeOutTimer.h"
+#include "observer/MTimeOutObserver.h"
 
 class CSocketTransmitter;
 class CSocketReceiver;
 class MSocketObserver;
+class MErrorObserver;
 
-class CSocketServer : public CActive, public MTimeOutNotify
+class CSocketServer : public CActive, public MTimeOutObserver
 {
    public:
       enum TSocketServerState
@@ -37,10 +39,10 @@ class CSocketServer : public CActive, public MTimeOutNotify
       ~CSocketServer();
 
       // Two-phased constructor.
-      static CSocketServer* NewL( MSocketObserver* aObserver = NULL );
+      static CSocketServer* NewL();
 
       // Two-phased constructor.
-      static CSocketServer* NewLC( MSocketObserver* aObserver = NULL );
+      static CSocketServer* NewLC();
 
    public:
       // New functions
@@ -57,11 +59,13 @@ class CSocketServer : public CActive, public MTimeOutNotify
       
       void ConnectL( TUint32           aAddr,
                      TUint16           aPort,
-                     TUint             aTimeout = 0 );
+                     TUint             aTimeout = 0,
+                     MErrorObserver*   aObserver = NULL );
       
       void ConnectL( const TDesC&      aServerName,
                      TUint16           aPort,
-                     TUint             aTimeout = 0 );
+                     TUint             aTimeout = 0,
+                     MErrorObserver*   aObserver = NULL );
 
       void Close();
 
@@ -70,7 +74,7 @@ class CSocketServer : public CActive, public MTimeOutNotify
       CSocketServer();
 
       // Second-phase constructor
-      void ConstructL( MSocketObserver* aObserver );
+      void ConstructL();
 
    private:
       // From CActive
@@ -88,6 +92,7 @@ class CSocketServer : public CActive, public MTimeOutNotify
       CSocketTransmitter*  iTransmitter;
       CSocketReceiver*     iReceiver;
       MSocketObserver*     iObserver;
+      MErrorObserver*      iConnectionObserver;
       TUint                iTimeout;
       RSocket              iSocket;
       RSocketServ          iSocketServ;

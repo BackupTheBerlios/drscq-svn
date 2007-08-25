@@ -3,10 +3,13 @@
 
 #include <e32base.h>
 
+#include "observer/MSocketObserver.h"
+
 namespace Protocol
 {
 
-   class MAbstractProtocol : public CBase
+   class MAbstractProtocol : public CBase, 
+                             public MSocketObserver
    {
       public:                    
       	virtual ~MAbstractProtocol(){}
@@ -14,10 +17,16 @@ namespace Protocol
          virtual TUint GetProtocolId() const = 0;
          
          virtual const TPtrC GetProtocolDescription() const = 0;
+         
+         virtual void OpenL() = 0;
 
-         virtual bool Login() = 0;
+         virtual void LoginL() = 0;
 
-         virtual bool Logout() = 0;
+         virtual void LogoutL() = 0;
+         
+         virtual void Cancel() = 0;
+         
+         virtual void Close() = 0;
                            
       protected:      
          MAbstractProtocol()

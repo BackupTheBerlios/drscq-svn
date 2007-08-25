@@ -15,13 +15,7 @@
 #include <e32std.h>
 #include <e32base.h>
 
-
-// MTimeOutNotify: used in conjunction with CTimeOutTimer class
-class MTimeOutNotify
-{
-   public:
-      virtual void TimerExpired() = 0;
-};
+#include "observer/MTimeOutObserver.h"
 
 // CLASS DECLARATION
 
@@ -29,18 +23,18 @@ class CTimeOutTimer : public CTimer
 {
    public:
       static CTimeOutTimer* NewL( const TInt aPriority, 
-                                  MTimeOutNotify& aTimeOutNotify );
+                                  MTimeOutObserver& aTimeOutNotify );
       ~CTimeOutTimer();
 
    protected:
       CTimeOutTimer( const TInt aPriority );
       
-      void ConstructL( MTimeOutNotify& aTimeOutNotify );
+      void ConstructL( MTimeOutObserver& aTimeOutNotify );
       
       virtual void RunL();
 
    private:
-      MTimeOutNotify* iNotify;
+      MTimeOutObserver* iNotify;
 };
 
 #endif // CTIMEOUTTIMER_H

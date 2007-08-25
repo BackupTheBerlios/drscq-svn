@@ -10,7 +10,7 @@
 #include <in_sock.h>
 
 #include "connection/CSocketReceiver.h"
-#include "connection/SocketObserver.h"
+#include "observer/MSocketObserver.h"
 
 CSocketReceiver::CSocketReceiver() 
 : CActive( EPriorityNormal ),
@@ -133,11 +133,11 @@ void CSocketReceiver::RunL()
                   // check which buffer has been filled
                   if ( iMultiByteBuffer != NULL )
                   {
-                     iObserver->Notify( static_cast < const TDesC8& > ( *iMultiByteBuffer ) );
+                     //iObserver->Notify( static_cast < const TDesC8& > ( *iMultiByteBuffer ) );
                   }
                   else
                   {
-                     iObserver->Notify( static_cast < const TDesC8& > ( iSingleByteBuffer ) );
+                     //iObserver->Notify( static_cast < const TDesC8& > ( iSingleByteBuffer ) );
                   }
                }
                

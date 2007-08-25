@@ -1,0 +1,40 @@
+/*
+* ==============================================================================
+*  Name        : DCQ1.rls
+*  Part of     : DCQ
+*  Interface   :
+*  Description :
+*  Version     :
+*
+*  Copyright (c) 2006 Nokia Corporation.
+*  This material, including documentation and any related
+*  computer programs, is protected by copyright controlled by
+*  Nokia Corporation.
+* ==============================================================================
+*/
+
+#define LANGUAGE               03 //German
+
+#if ( LANGUAGE == 03 )
+
+//  LOCALISATION STRINGS
+
+#define STRING_r_mult_SocketObserver_Successful _L("Vorgang erfolgreich")
+   
+#define STRING_r_mult_SocketObserver_Timeout _L("Timeout")
+
+#define STRING_r_mult_SocketObserver_Generic _L("allgemeiner Fehler")
+   
+#define STRING_r_mult_SocketObserver_Unknown _L("unbekannter Fehler")
+
+#define STRING_r_mult_SocketObserver_Canceled _L("Abgebrochen")
+
+#define STRING_r_mult_SocketObserver_Connecting _L("Verbinde")
+
+#define STRING_r_mult_SocketObserver_Connection_Failed _L("Verbindung fehlgeschlagen")
+
+#define STRING_r_mult_SocketObserver_Connection_Lost _L("Verbindung verloren")
+
+#define STRING_r_mult_SocketObserver_DNS_Failure _L("DNS look-up fehlgeschlagen")
+
+#endif // LANGUAGE == 03

@@ -28,12 +28,22 @@ namespace Protocol {
       TUint GetProtocolId() const;
 
       const TPtrC GetProtocolDescription() const;
+      
+      void OpenL();
 
-      bool Login();
+      void LoginL();
 
-      bool Logout();
+      void LogoutL();
+      
+      void Cancel();
+      
+      void Close();
 
    private:
+      
+      void NotifySuccess();
+      
+      void NotifyError( TSocketObserverErrorCode aErrCode );
       
       COSCARProtocol();
       

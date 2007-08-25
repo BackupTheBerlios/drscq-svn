@@ -8,7 +8,7 @@
 ============================================================================
 */
 
-#include "connection/TimeOutTimer.h"
+#include "connection/CTimeOutTimer.h"
 
 CTimeOutTimer::CTimeOutTimer( const TInt aPriority ) 
 : CTimer( aPriority )
@@ -21,7 +21,7 @@ CTimeOutTimer::~CTimeOutTimer()
 }
 
 CTimeOutTimer* CTimeOutTimer::NewL(const TInt aPriority,
-                                   MTimeOutNotify& aTimeOutNotify)
+                                   MTimeOutObserver& aTimeOutNotify)
 {
    CTimeOutTimer *p = new (ELeave) CTimeOutTimer(aPriority);
    CleanupStack::PushL( p );
@@ -33,7 +33,7 @@ CTimeOutTimer* CTimeOutTimer::NewL(const TInt aPriority,
 /**
  * ConstructL function is used to add the active object to the scheduler 
  */
-void CTimeOutTimer::ConstructL( MTimeOutNotify &aTimeOutNotify )
+void CTimeOutTimer::ConstructL( MTimeOutObserver &aTimeOutNotify )
 {
    iNotify = &aTimeOutNotify;
    CTimer::ConstructL();

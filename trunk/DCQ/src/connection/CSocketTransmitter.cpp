@@ -10,7 +10,7 @@
 #include <in_sock.h>
 
 #include "connection/CSocketTransmitter.h"
-#include "connection/SocketObserver.h"
+#include "observer/MSocketObserver.h"
 
 CSocketTransmitter::CSocketTransmitter() 
 : CActive( EPriorityNormal),

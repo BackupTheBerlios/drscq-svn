@@ -19,6 +19,7 @@ NAME DCQX
 #include <eikon.rh>
 #include <avkon.rh>
 #include <avkon.rsg>
+#include <avkon.mbg>
 #include <appinfo.rh>
 
 #include "DCQ.hrh"
@@ -253,6 +254,36 @@ RESOURCE POPUP_SETTING_LIST r_remember_pass_popup_setting_list
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // -----------------------------------------------------------------------------
 //
+//    r_DCQ_wait_note
+//    Define a wait notification when connecting
+//
+// -----------------------------------------------------------------------------
+//
+RESOURCE DIALOG r_DCQ_wait_note_connecting
+{
+   flags = EAknWaitNoteFlags;
+   buttons = R_AVKON_SOFTKEYS_CANCEL;
+   items =
+   {
+      DLG_LINE
+      {
+         type = EAknCtNote;
+         id = EDCQCommonWaitNoteConnecting;
+         control = AVERELL_NOTE
+                   {
+                      layout = EWaitLayout;
+                      singular_label = STRING_r_mult_wait_note_connecting;
+                      //imagefile = "\\system\\data\\avkon.mbm";
+                      //imageid = EMbmAvkonQgn_note_progress;
+                      //imagemask = EMbmAvkonQgn_note_progress_mask;
+                      //animation = R_QGN_GRAF_WAIT_BAR_ANIM;
+                   };
+      }
+   };
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// -----------------------------------------------------------------------------
+//
 //    r_DCQ_info_static_notification
 //    Define static notification showing general application information
 //
@@ -276,102 +307,4 @@ RESOURCE DIALOG r_DCQ_info_static_notification
       }
    };
 }
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// -----------------------------------------------------------------------------
-//
-//    r_DCQ_ServerObserver_static_notification
-//    Define static notification showing actual notification from SocketServer
-//
-// -----------------------------------------------------------------------------
-//
-RESOURCE DIALOG r_DCQ_ServerObserver_static_notification
-{
-   flags = EEikDialogFlagNoDrag | EEikDialogFlagNoTitleBar | EEikDialogFlagCbaButtons | EEikDialogFlagNoShadow;   
-   buttons = R_AVKON_SOFTKEYS_CLOSE;
-   items =
-   {
-      DLG_LINE
-      {
-         type = EAknCtNote;
-         id = EDCQStaticNotifySocketObserver;
-         control = AVKON_NOTE
-                   {
-                     layout = ETextualNotificationLayout;
-                     singular_label = STRING_r_mult_socket_observer_static_notify;                  
-                   };
-      }
-   };
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// -----------------------------------------------------------------------------
-//
-//    r_DCQ_view2
-//    Define view 2
-//
-// -----------------------------------------------------------------------------
-//
-RESOURCE AVKON_VIEW r_DCQ_view2
-{
-   menubar = r_DCQ_menubar2;
-   cba = R_AVKON_SOFTKEYS_OPTIONS_EXIT;
-}
-
-// -----------------------------------------------------------------------------
-//
-//   r_DCQ_menubar2
-//   Menu title definition
-//
-// -----------------------------------------------------------------------------
-//
-RESOURCE MENU_BAR r_DCQ_menubar2
-{
-   titles =
-   {
-      MENU_TITLE
-      {
-         menu_pane = r_DCQ_menu2;
-      }
-   };
-}
-
-// -----------------------------------------------------------------------------
-//
-//   r_DCQ_menu2
-//   Menu for "Options"
-//
-// -----------------------------------------------------------------------------
-//
-RESOURCE MENU_PANE r_DCQ_menu2
-{
-   items =
-   {
-      //            MENU_ITEM
-      //            {
-      //                command = EDCQSwitchToView1;
-      //                txt = STRING_r_mult_switch_to_view1;
-      //            },
-      //            MENU_ITEM
-      //            {
-      //                command = EDCQCommand1;
-      //                txt = STRING_r_mult_command1;
-      //            },
-      MENU_ITEM
-      {
-         command = EAknSoftkeyExit;
-         txt = STRING_r_mult_exit;
-      }
-   };
-}
-
-// -----------------------------------------------------------------------------
-//
-// Resources for messages.
-//
-// -----------------------------------------------------------------------------
-//
-RESOURCE TBUF32 r_mult_command1_text
-{  buf=STRING_r_mult_command1_text;}
-
 // End of File

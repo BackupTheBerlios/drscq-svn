@@ -32,8 +32,12 @@ enum TDCQCommonCommandIds
 
 enum TDCQStaticNotifications
 {
-   EDCQStaticNotifyInfo,
-   EDCQStaticNotifySocketObserver
+   EDCQStaticNotifyInfo = 0x401
+};
+
+enum TDCQWaitNotes
+{
+   EDCQCommonWaitNoteConnecting = 0x501
 };
 
 
@@ -66,11 +70,6 @@ enum TDCQLoginViewSettingItemOrder
 };
 
 /** End Login view **********************************************************/
-
-/** Begin info static notification **********************************************************/
-
-
-/** End info static notification **********************************************************/
 
 #endif // __DCQ_HRH__
 

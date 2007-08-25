@@ -13,12 +13,13 @@
 
 #include <e32base.h>	   // For CActive, link against: euser.lib
 
-#include "connection/TimeOutTimer.h"
+#include "connection/CTimeOutTimer.h"
+#include "observer/MTimeOutObserver.h"
 
 class MSocketObserver;
 class RSocket;
 
-class CSocketReceiver : public CActive, public MTimeOutNotify
+class CSocketReceiver : public CActive, public MTimeOutObserver
 {
    public:
       enum TReceiveState 

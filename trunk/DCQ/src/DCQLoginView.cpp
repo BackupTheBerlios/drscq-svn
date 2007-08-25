@@ -179,27 +179,4 @@ void CDCQLoginView::HandleSizeChange( TInt aType)
    }
 }
 
-void CDCQLoginView::Notify( const TDesC8& /* aReadData */ )
-{
-
-}
-
-void CDCQLoginView::NotifyError( TSocketObserverErrorCode aErrCode )
-{
-   CAknStaticNoteDialog* dlg = new ( ELeave ) CAknStaticNoteDialog;
-   
-   // ...and prepare infos...
-   //CleanupStack::PushL( dlg );
-   dlg->PrepareLC( R_DCQ_INFO_STATIC_NOTIFICATION /*R_DCQ_SERVEROBSERVER_STATIC_NOTIFICATION*/ );
-   dlg->SetNumberOfBorders( 4 );   
-   TBuf < 255 > buffer;
-   TSocketObserverErrorCodes::ToString( aErrCode, static_cast < TDes& > ( buffer ) );
-   dlg->SetTextL( buffer );
-   //CleanupStack::Pop( dlg );
-   
-   // ...and run dialog...
-   // dialog will delete itself after closing
-   dlg->RunLD();
-}
-
 // End of File

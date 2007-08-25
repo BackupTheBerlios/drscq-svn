@@ -21,110 +21,41 @@
 
 /* Common */
 //d:Caption string for app.
-#define STRING_r_mult_caption_string "DrSCQ"
+rls_string STRING_r_mult_caption_string "DrSCQ"
 
 //d:Short caption string for app.
-#define STRING_r_mult_short_caption_string "DCQ"
+rls_string STRING_r_mult_short_caption_string "DCQ"
 
 //d:Menu text to about function
-#define STRING_r_mult_about "Info"
+rls_string STRING_r_mult_about "Info"
 
 //d:Menu text to exit function
-#define STRING_r_mult_exit "Exit"
+rls_string STRING_r_mult_exit "Exit"
 
 /* Login View ***********************************************************************/
 // Menu items
-#define STRING_r_mult_do_login "Login"
+rls_string STRING_r_mult_do_login "Login"
 
-#define STRING_r_mult_new_account "Neuer Account"
+rls_string STRING_r_mult_new_account "Neuer Account"
 
-#define STRING_r_mult_settings "Einstellungen"
+rls_string STRING_r_mult_settings "Einstellungen"
 
 // Settings
-#define STRING_r_mult_ICQ_number "ICQ Nummer" 
+rls_string STRING_r_mult_ICQ_number "ICQ Nummer" 
 
-#define STRING_r_mult_ICQ_password "ICQ Passwort"
+rls_string STRING_r_mult_ICQ_password "ICQ Passwort"
 
-#define STRING_r_mult_remember_pass "Passwort merken"
+rls_string STRING_r_mult_remember_pass "Passwort merken"
 
-#define STRING_r_mult_remember_pass_yes "ja"
+rls_string STRING_r_mult_remember_pass_yes "ja"
 
-#define STRING_r_mult_remember_pass_no "nein"
+rls_string STRING_r_mult_remember_pass_no "nein"
 
 /* Info static notification ***********************************************************************/
-#define STRING_r_mult_info "Info:\nDCQ Version 'TODO'\nProtokolle: %d\n"
+rls_string STRING_r_mult_info "Info:\nDCQ Version 'TODO'\nProtokolle: %d\n"
 
-/* SocketObserver static notification ***********************************************************************/
-#define STRING_r_mult_socket_observer_static_notify "Verbindungsinfo:\n"
+/* Connecting wait note  ***********************************************************************/
+rls_string STRING_r_mult_wait_note_connecting "Verbinde..."
 
-/* SocketObserver error codes ********************************************************************/
-#define STRING_r_mult_SocketObserver_ErrorNone _L("kein Fehler")
-   
-#define STRING_r_mult_SocketObserver_Timeout _L("Timeout")
-
-#define STRING_r_mult_SocketObserver_Generic _L("allgemeiner Fehler")
-   
-#define STRING_r_mult_SocketObserver_Unknown _L("unbekannter Fehler")
-
-#define STRING_r_mult_SocketObserver_Canceled _L("Abgebrochen")
-
-#define STRING_r_mult_SocketObserver_Connecting _L("Verbinde")
-
-#define STRING_r_mult_SocketObserver_Connection_Failed _L("Verbindung fehlgeschlagen")
-
-#define STRING_r_mult_SocketObserver_Connection_Lost _L("Verbindung verloren")
-
-#define STRING_r_mult_SocketObserver_DNS_Failure _L("DNS look-up fehlgeschlagen")
 
 #endif // LANGUAGE == 03
-
-
-#if ( LANGUAGE == 01 )
-//  LOCALISATION STRINGS
-
-/* Common */
-//d:Caption string for app.
-#define STRING_r_mult_caption_string "DrSCQ"
-
-//d:Short caption string for app.
-#define STRING_r_mult_short_caption_string "DCQ"
-
-//d:Menu text to about function
-#define STRING_r_mult_about "Info"
-
-//d:Menu text to exit function
-#define STRING_r_mult_exit "Exit"
-
-/* Login View ***********************************************************************/
-// Menu items
-#define STRING_r_mult_do_login "Login"
-
-#define STRING_r_mult_new_account "New account"
-
-#define STRING_r_mult_settings "Settings"
-
-// Settings
-#define STRING_r_mult_ICQ_number "ICQ number" 
-
-#define STRING_r_mult_ICQ_password "ICQ password"
-
-#define STRING_r_mult_remember_pass "Remember password"
-
-#define STRING_r_mult_remember_pass_yes "yes"
-
-#define STRING_r_mult_remember_pass_no "no"
-
-/* Info static notification ***********************************************************************/
-#define STRING_r_mult_info "Info:\nDCQ Version 'TODO'\nProtocols: %d\n"
-
-/* SocketObserver error codes ********************************************************************/
-#define STRING_r_mult_SocketObserver_ErrorNone _L("no error")
-   
-#define STRING_r_mult_SocketObserver_Timeout _L("timeout")
-
-#define STRING_r_mult_SocketObserver_Generic _L("generic error")
-   
-#define STRING_r_mult_SocketObserver_Unknown _L("unknown error")
-
-  
-#endif

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CarbideBuilderConfigInfo version="1">
-  <configuration name="Phone Release (GCCE) [S60_3rd_FP1]">
+  <configuration name="Emulator Debug (WINSCW) [S60_3rd_FP1_2]">
     <sisBuilder additionalOptions="" cert="" contentSearchLocation="" key="" outputFileName="" password="" pkgFile="(none)" signedFileName=""/>
     <envVars/>
   </configuration>
-  <configuration name="Emulator Debug (WINSCW) [S60_3rd_FP1]">
+  <configuration name="Phone Release (GCCE) [S60_3rd_FP1_2]">
     <sisBuilder additionalOptions="" cert="" contentSearchLocation="" key="" outputFileName="" password="" pkgFile="(none)" signedFileName=""/>
     <envVars/>
   </configuration>

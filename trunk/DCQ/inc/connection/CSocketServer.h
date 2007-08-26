@@ -22,6 +22,7 @@ class CSocketTransmitter;
 class CSocketReceiver;
 class MSocketObserver;
 class MErrorObserver;
+class MProgressObserver;
 
 class CSocketServer : public CActive, public MTimeOutObserver
 {
@@ -57,19 +58,23 @@ class CSocketServer : public CActive, public MTimeOutObserver
                      TUint              aBlockUntil = 0,
                      TUint              aTimeout = 0 );
       
-      void ConnectL( TUint32           aAddr,
-                     TUint16           aPort,
-                     TUint             aTimeout = 0,
-                     MErrorObserver*   aObserver = NULL );
+      void ConnectL( TUint32            aAddr,
+                     TUint16            aPort,
+                     TUint              aTimeout = 0,
+                     MErrorObserver*    aErrorObserver = NULL,
+                     MProgressObserver* aProgressObserver = NULL );
       
-      void ConnectL( const TDesC&      aServerName,
-                     TUint16           aPort,
-                     TUint             aTimeout = 0,
-                     MErrorObserver*   aObserver = NULL );
+      void ConnectL( const TDesC&       aServerName,
+                     TUint16            aPort,
+                     TUint              aTimeout = 0,
+                     MErrorObserver*    aErrorObserver = NULL,
+                     MProgressObserver* aProgressObserver = NULL);
 
-      void Close();
+      TBool IsConnected() const;
       
-      bool IsConnected() const;
+      void Close();     
+      
+      RSocketServ& GetSocketServInstance();
 
    private:
       // C++ constructor
@@ -78,8 +83,8 @@ class CSocketServer : public CActive, public MTimeOutObserver
       // Second-phase constructor
       void ConstructL();
       
-      void ConnectResolvedL( TUint32           aAddr,
-                             TUint16           aPort );        
+      void ConnectResolvedL( TUint32 aAddr,
+                             TUint16 aPort );        
 
    private:
       // From CActive
@@ -96,8 +101,9 @@ class CSocketServer : public CActive, public MTimeOutObserver
       TSocketServerState   iServerStatus;
       CSocketTransmitter*  iTransmitter;
       CSocketReceiver*     iReceiver;
-      MSocketObserver*     iObserver;
-      MErrorObserver*      iConnectionObserver;
+      MSocketObserver*     iSocketObserver;
+      MErrorObserver*      iErrorObserver;
+      MProgressObserver*   iProgressObserver;
       TUint                iTimeout;
       RSocket              iSocket;
       RSocketServ          iSocketServ;

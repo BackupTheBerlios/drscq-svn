@@ -21,43 +21,68 @@
 
 /* Common */
 //d:Caption string for app.
-rls_string STRING_r_mult_caption_string "DrSCQ"
+#define STRING_r_mult_caption_string "DrSCQ"
 
 //d:Short caption string for app.
-rls_string STRING_r_mult_short_caption_string "DCQ"
+#define STRING_r_mult_short_caption_string "DCQ"
 
 //d:Menu text to about function
-rls_string STRING_r_mult_about "Info"
+#define STRING_r_mult_about "Info"
 
 //d:Menu text to exit function
-rls_string STRING_r_mult_exit "Exit"
+#define STRING_r_mult_exit "Exit"
 
 /* Login View ***********************************************************************/
 // Menu items
-rls_string STRING_r_mult_do_login "Login"
+#define STRING_r_mult_do_login "Login"
 
-rls_string STRING_r_mult_new_account "Neuer Account"
+#define STRING_r_mult_new_account "Neuer Account"
 
-rls_string STRING_r_mult_settings "Einstellungen"
+#define STRING_r_mult_settings "Einstellungen"
 
 // Settings
-rls_string STRING_r_mult_ICQ_number "ICQ Nummer" 
+#define STRING_r_mult_ICQ_number "ICQ Nummer" 
 
-rls_string STRING_r_mult_ICQ_password "ICQ Passwort"
+#define STRING_r_mult_ICQ_password "ICQ Passwort"
 
-rls_string STRING_r_mult_remember_pass "Passwort merken"
+#define STRING_r_mult_remember_pass "Passwort merken"
 
-rls_string STRING_r_mult_remember_pass_yes "ja"
+#define STRING_r_mult_remember_pass_yes "ja"
 
-rls_string STRING_r_mult_remember_pass_no "nein"
+#define STRING_r_mult_remember_pass_no "nein"
 
 /* Info static notification ***********************************************************************/
-rls_string STRING_r_mult_info "Info:\nDCQ Version 'TODO'\nProtokolle: %d\n"
+#define STRING_r_mult_info "Info:\nDCQ Version 'TODO'\nProtokolle: %d\n"
 
 /* Connecting wait note  ***********************************************************************/
-rls_string STRING_r_mult_wait_note_connecting "Verbinde..."
+#define STRING_r_mult_wait_note_connecting "Verbinde..."
 
+/* MErrorObserver errors  ***********************************************************************/
+#define STRING_r_mult_ErrorObserver_Successful _L("Vorgang erfolgreich.")
 
+#define STRING_r_mult_ErrorObserver_Timeout _L("Zeitueberschreitung der Anfrage.")
 
+#define STRING_r_mult_ErrorObserver_Generic _L("Allgemeiner Fehler.")
+   
+#define STRING_r_mult_ErrorObserver_Unknown _L("Unbekannter Fehler.")
+
+#define STRING_r_mult_ErrorObserver_Canceled _L("Abgebrochen.")
+
+#define STRING_r_mult_ErrorObserver_Connection_Failed _L("Verbindung fehlgeschlagen.")
+
+#define STRING_r_mult_ErrorObserver_Connection_Lost _L("Verbindung verloren.")
+
+#define STRING_r_mult_ErrorObserver_Connection_Already_Exists _L("Die Verbindung besteht bereits.")
+
+#define STRING_r_mult_ErrorObserver_DNS_Failure _L("Server-Namensaufloesung fehlgeschlagen.")
+
+/* MProgressObserver progress types  ***************************************************************/
+#define STRING_r_mult_ProgressObserver_OpenConnection _L("Oeffne Socket...")
+
+#define STRING_r_mult_ProgressObserver_Connecting _L("Verbinde...")
+
+#define STRING_r_mult_ProgressObserver_DNS_Resolving _L("Loese Servernamen auf...")
+
+#define STRING_r_mult_ProgressObserver_Canceling_Progress _L("Wird abgebrochen...")
 
 #endif // LANGUAGE == 03

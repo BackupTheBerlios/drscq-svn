@@ -13,17 +13,49 @@
 
 // INCLUDES
 #include <e32cmn.h>
+#include "DCQ.rls"
 
-struct TProgressTypes
+struct TProgressInfoTypes
 {
    enum TTypes
    {
-      EProgressGauge = 0,
-      EProgressWait,
-   };  
+      EOpeningConnection = 0,
+      EConnecting,
+      EResolvingServerName,
+      ECancelingProgress
+   };
+   
+   static void ToString( TTypes aInfoCode, TDes& aString )
+   {
+      switch ( aInfoCode )
+      {
+         case EOpeningConnection :
+         {
+            aString = STRING_r_mult_ProgressObserver_OpenConnection;
+            break;
+         }
+         case EConnecting :
+         {
+            aString = STRING_r_mult_ProgressObserver_Connecting;
+            break;
+         }
+         case EResolvingServerName :
+         {
+            aString = STRING_r_mult_ProgressObserver_DNS_Resolving;
+            break;
+         }
+         case ECancelingProgress :
+         {
+            aString = STRING_r_mult_ProgressObserver_Canceling_Progress;
+            break;
+         }
+         default : break;            
+      }
+   }
+   
 };
 
-typedef TProgressTypes::TTypes TProgressType;
+typedef TProgressInfoTypes::TTypes TProgressInfoType;
 
 // CLASS DECLARATION
 
@@ -40,7 +72,7 @@ class MProgressObserver
        */
       virtual ~MProgressObserver(){}
       
-      virtual void NotifyProgress( TProgressType aProgressType, TUint8 aPercentage = 0 ) = 0;     
+      virtual void NotifyProgress( TProgressInfoType aProgressInfo, TUint8 aPercentage = 0 ) = 0;     
 };
 
 

@@ -38,7 +38,7 @@ enum TDCQStaticNotifications
 
 enum TDCQWaitNotes
 {
-   EDCQCommonWaitNoteConnecting = 0x501
+   EDCQCommonWaitNote = 0x501
 };
 
 

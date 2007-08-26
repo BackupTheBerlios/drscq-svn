@@ -14,7 +14,7 @@
 // INCLUDES
 #include <e32cmn.h>
 
-#include "DCQ1.rls"
+#include "DCQ.rls"
 
 struct TErrorObserverErrorTypes
 {
@@ -36,9 +36,10 @@ struct TErrorObserverInfoTypes
      ESuccessful = 0,
      ETimeOut,
      EErrorGeneric,
+     EErrorUnknown,
      ECanceled,      
-     EConnecting,
      EConnectionFailed,
+     EConnectionAlreadyExists,
      EDNSFailure,           
   };
   
@@ -48,42 +49,47 @@ struct TErrorObserverInfoTypes
      {         
         case ESuccessful :
         {
-          aString = STRING_r_mult_SocketObserver_Successful;
+          aString = STRING_r_mult_ErrorObserver_Successful;
            break;
         }
         case ETimeOut :
         {
-           aString = STRING_r_mult_SocketObserver_Timeout;
+           aString = STRING_r_mult_ErrorObserver_Timeout;
            break;           
         }
         case EErrorGeneric :
         {
-           aString = STRING_r_mult_SocketObserver_Generic;
+           aString = STRING_r_mult_ErrorObserver_Generic;
+           break;
+        }
+        case EErrorUnknown :
+        {
+           aString = STRING_r_mult_ErrorObserver_Unknown;
            break;
         }
         case ECanceled :
         {
-           aString = STRING_r_mult_SocketObserver_Canceled;
-           break;
-        }
-        case EConnecting :
-        {
-           aString = STRING_r_mult_SocketObserver_Connecting;
+           aString = STRING_r_mult_ErrorObserver_Canceled;
            break;
         }
         case EConnectionFailed :
         {
-           aString = STRING_r_mult_SocketObserver_Connection_Failed;
+           aString = STRING_r_mult_ErrorObserver_Connection_Failed;
+           break;
+        }
+        case EConnectionAlreadyExists :
+        {
+           aString = STRING_r_mult_ErrorObserver_Connection_Already_Exists;
            break;
         }
         case EDNSFailure :
         {
-           aString = STRING_r_mult_SocketObserver_DNS_Failure;
+           aString = STRING_r_mult_ErrorObserver_DNS_Failure;
            break;
         }
         default :
         {
-           aString = STRING_r_mult_SocketObserver_Unknown;
+           aString = STRING_r_mult_ErrorObserver_Unknown;
            break;
         }
      }
@@ -108,7 +114,9 @@ class MErrorObserver
        */
       virtual ~MErrorObserver(){}
       
-      virtual void NotifyError( TErrorObserverErrorType aErrorType, TErrorObserverInfoType aInfoType ) = 0;     
+      virtual void NotifyError( TErrorObserverErrorType aErrorType, 
+                                TErrorObserverInfoType  aInfoType,
+                                TInt                    aErrorCode = 0 ) = 0;
 };
 
 #endif /*MERROROBSERVER_H_*/

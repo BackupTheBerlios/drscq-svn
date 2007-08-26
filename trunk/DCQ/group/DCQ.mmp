@@ -51,13 +51,11 @@ LIBRARY           cone.lib
 LIBRARY           eikcore.lib
 LIBRARY           avkon.lib
 LIBRARY           commonengine.lib estor.lib efsrv.lib eikcoctl.lib eikctl.lib 
-LIBRARY			  bafl.lib esock.lib insock.lib
+LIBRARY			  bafl.lib esock.lib insock.lib commdb.lib
 
 LANG 			  SC
-
-CAPABILITY 		  none
-
 VENDORID		  0
+EPOCSTACKSIZE 	  0x8000
 
 SOURCEPATH ..\src
 SOURCE DCQappview.cpp DCQLoginViewSettings.cpp FileIO.cpp
@@ -68,4 +66,5 @@ SOURCE CSocketServer.cpp CTimeOutTimer.cpp CSocketTransmitter.cpp CSocketReceive
 SOURCEPATH ..\src\clients
 SOURCE CICQClient.cpp
 
-EPOCSTACKSIZE 0x8000
+
+CAPABILITY CommDD NetworkServices

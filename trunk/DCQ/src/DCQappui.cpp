@@ -16,7 +16,7 @@
 // INCLUDE FILES
 #include <e32std.h>
 #include <DCQ.rsg>
-#include <aknstaticnotedialog.h> 
+#include <aknstaticnotedialog.h>
 
 #include "DCQ.hrh"
 #include "DCQ.pan"
@@ -28,7 +28,8 @@
 
 // ========================= MEMBER FUNCTIONS ==================================
 CDCQAppUi::CDCQAppUi()
-: iLoginView( NULL ),
+: iIAPPreferences(),
+  iLoginView( NULL ),
   iICQClient( NULL ),
   iWaitDialog( NULL ),
   iIdle( true )
@@ -65,6 +66,7 @@ void CDCQAppUi::ConstructL()
    
    iICQClient = CICQClient::NewL();
    iICQClient->RegisterErrorObsrerver( this );
+   iICQClient->RegisterProgressObserver( this );
    
    CleanupStack::Pop( iLoginView );   
 }
@@ -80,14 +82,14 @@ void CDCQAppUi::HandleCommandL( TInt aCommand )
    {
       case EDCQLoginViewDoLogin :
       {   
-         if ( iICQClient != NULL )
+         if ( iIdle 
+             && iICQClient != NULL 
+             && !iICQClient->IsConnected() )
          {            
-            ASSERT( iWaitDialog == NULL );
-            iWaitDialog = new (ELeave) CAknWaitDialog ( REINTERPRET_CAST ( CEikDialog**, &iWaitDialog ), ETrue );
-            iWaitDialog->SetCallback( this );            
-            iWaitDialog->ExecuteLD ( R_DCQ_WAIT_NOTE_CONNECTING );
+            SelectIAP();
             
-            iICQClient->ConnectL( _L("www.google.de"), 80 );                       
+            iIdle = false;                        
+            iICQClient->ConnectL( _L("www.google.de"), 80, iIAPPreferences );            
          }
          break;
       }
@@ -121,6 +123,17 @@ void CDCQAppUi::HandleResourceChangeL( TInt aType )
 }
 
 
+
+void CDCQAppUi::SelectIAP()
+{
+   iIAPPreferences.SetDirection( ECommDbConnectionDirectionOutgoing );
+   iIAPPreferences.SetDialogPreference( ECommDbDialogPrefPrompt );
+   iIAPPreferences.SetIapId( 0 );
+   iIAPPreferences.SetBearerSet( 0 );
+}
+
+
+
 void CDCQAppUi::DialogDismissedL( TInt /* aButton */ )
 {
    if ( iICQClient != NULL )
@@ -137,26 +150,50 @@ void CDCQAppUi::DialogDismissedL( TInt /* aButton */ )
 }
 
 
-void CDCQAppUi::NotifyProgress( TProgressType aProgressType, TUint8 /* aPercentage */ )
+void CDCQAppUi::NotifyProgress( TProgressInfoType aProgressType, TUint8 /* aPercentage */ )
 {
-   ASSERT( iIdle );
+   ASSERT( !iIdle );
+   
+   TBuf < 255 > buffer;
+   TProgressInfoTypes::ToString( aProgressType, static_cast < TDes& > ( buffer ) );
+   
    switch ( aProgressType )
    {
-      case TProgressTypes::EProgressGauge :
+      case TProgressInfoTypes::EOpeningConnection :
       {
+         ASSERT( iWaitDialog == NULL );
+         iWaitDialog = new ( ELeave ) CAknWaitDialog ( REINTERPRET_CAST ( CEikDialog**, &iWaitDialog ), ETrue );
+         iWaitDialog->SetCallback( this );
+         TRAP_IGNORE( iWaitDialog->SetTextL( buffer ) );
+         
+         TInt trapCode;
+         TRAP( trapCode, iWaitDialog->ExecuteLD ( R_DCQ_COMMON_WAIT_NOTE ) );
+         
+         if ( trapCode != KErrNone )
+         {
+            delete iWaitDialog;
+            iWaitDialog = NULL;
+         }
+         
          break;
       }
-      case TProgressTypes::EProgressWait :
+      default:
       {
+         if ( iWaitDialog != NULL )
+         {
+            iWaitDialog->SetTextL( buffer );
+         }         
          break;
-      }
-      default : break;
-   }
+      }   
+   }   
 }
 
-void CDCQAppUi::NotifyError( TErrorObserverErrorType aErrorType, TErrorObserverInfoType aInfoType )
+
+void CDCQAppUi::NotifyError( TErrorObserverErrorType aErrorType, 
+                             TErrorObserverInfoType  aInfoType,
+                             TInt                    aErrorCode )
 {
-   ASSERT( iIdle );
+   ASSERT( !iIdle );
    
    if ( iWaitDialog != NULL )
    {
@@ -165,45 +202,56 @@ void CDCQAppUi::NotifyError( TErrorObserverErrorType aErrorType, TErrorObserverI
       iWaitDialog = NULL;
    }
    
-   bool aMustNotify = ( aInfoType != TErrorObserverInfoTypes::ESuccessful );
+   bool aMustNotifyUser = ( aInfoType != TErrorObserverInfoTypes::ESuccessful );
    
-   if ( aMustNotify )
+   if ( aMustNotifyUser )
    {
       TBuf < 255 > buffer;
       TErrorObserverInfoTypes::ToString( aInfoType, static_cast < TDes& > ( buffer ) );
+            
+      if ( aErrorCode != 0 )
+      {
+         buffer.Append( _L(" (") );
+         buffer.AppendNum( aErrorCode );
+         buffer.Append( _L(")") );
+      }
+
+      
+      CAknStaticNoteDialog* dlg = new ( ELeave ) CAknStaticNoteDialog;
+      CleanupStack::PushL( dlg );
       
       switch ( aErrorType )
       {
          case TErrorObserverErrorTypes::EErrorCritical :
-         {
-            CAknStaticNoteDialog* dlg = new ( ELeave ) CAknStaticNoteDialog;
-            
-            // ...and prepare infos...
-            CleanupStack::PushL( dlg );
+         {                               
             dlg->PrepareLC( R_DCQ_NOTE_ERROR_CRITICAL );
-            dlg->SetNumberOfBorders( 4 );
-            dlg->SetTextL( buffer );
-            CleanupStack::Pop( dlg );
-            
-            // ...and run dialog...
-            // dialog will delete itself after closing
-            dlg->RunLD();
             break;
          }
          case TErrorObserverErrorTypes::EErrorWarning :
          {
+            dlg->PrepareLC( R_DCQ_NOTE_ERROR_CRITICAL );
             break;
          }
          case TErrorObserverErrorTypes::EErrorInfo :
          {
+            dlg->PrepareLC( R_DCQ_NOTE_ERROR_CRITICAL );
             break;
          }
          case TErrorObserverErrorTypes::EErrorDebug :
          {
+            dlg->PrepareLC( R_DCQ_NOTE_ERROR_CRITICAL );
             break;
          }
          default : break;
       }
+      
+      dlg->SetNumberOfBorders( 4 );
+      dlg->SetTextL( buffer );
+      CleanupStack::Pop( dlg );
+      
+      // ...and run dialog...
+      // dialog will delete itself after closing
+      dlg->RunLD();
    }
    
    iIdle = true;   

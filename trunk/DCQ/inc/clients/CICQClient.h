@@ -12,13 +12,15 @@
 #define CICQCLIENT_H
 
 // INCLUDES
-#include <e32std.h>
-#include <e32base.h>
+#include <e32cons.h>
+#include <es_sock.h>
+#include <nifman.h>
 
 class MProgressObserver;
 class MErrorObserver;
 class CSocketServer;
 namespace Protocol { class COSCARProtocol; }
+class TCommDbConnPref;
 
 // CLASS DECLARATION
 
@@ -26,8 +28,17 @@ namespace Protocol { class COSCARProtocol; }
 *  CICQClient
 * 
 */
-class CICQClient : public CBase
+class CICQClient : public CActive
 {
+   public:
+      
+      enum TICQClientStates
+      {
+         EIdle,
+         EOpening,
+         EOpen
+      };
+      
    public: // Constructors and destructor
    
    	/**
@@ -48,17 +59,17 @@ class CICQClient : public CBase
       
       void RegisterProgressObserver( MProgressObserver* aProgressObserver );
            
-      void RegisterErrorObsrerver( MErrorObserver* aErrorObserer );
+      void RegisterErrorObsrerver( MErrorObserver* aErrorObserer );     
+           
+      void ConnectL( TUint32 aAddr, TUint16 aPort, TCommDbConnPref& aConPrefs );
       
-      void ConnectL( TUint32 aAddr, TUint16 aPort );
+      void ConnectL( const TDesC& aServerName, TUint16 aPort, TCommDbConnPref& aConPrefs );     
       
-      void ConnectL( const TDesC& aServerName, TUint16 aPort );     
+      TBool IsConnected() const;
       
       void Cancel();
       
-      void Shutdown();
-      
-      bool IsConnected() const;
+      void Shutdown();     
    
    private:
    
@@ -72,12 +83,28 @@ class CICQClient : public CBase
    		*/
    	void ConstructL();
       
+      void OpenL( TCommDbConnPref& aConPrefs );      
+      
+       // From CActive
+      // Handle completion
+      void RunL();
+
+      // How to cancel me
+      void DoCancel();
+      
    private:
       
+      TICQClientStates          iClientStatus;
       MProgressObserver*        iProgressObserver;
       MErrorObserver*           iErrorObserver;
+      RConnection               iConnection;
       CSocketServer*            iSocketServer;
-      Protocol::COSCARProtocol* iProtocol;      
+      Protocol::COSCARProtocol* iProtocol;
+      
+      TUint32                   iAddr;
+      TUint16                   iPort;    
+      TBuf < KMaxSockAddrSize > iName;
+      
 };
 
 #endif // CICQCLIENT_H

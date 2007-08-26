@@ -254,12 +254,12 @@ RESOURCE POPUP_SETTING_LIST r_remember_pass_popup_setting_list
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // -----------------------------------------------------------------------------
 //
-//    r_DCQ_wait_wait_note_connecting
-//    Define a wait notification when connecting
+//    r_DCQ_common_wait_note
+//    Define a common wait notification
 //
 // -----------------------------------------------------------------------------
 //
-RESOURCE DIALOG r_DCQ_wait_note_connecting
+RESOURCE DIALOG r_DCQ_common_wait_note
 {
    flags = EAknWaitNoteFlags;
    buttons = R_AVKON_SOFTKEYS_CANCEL;
@@ -268,11 +268,11 @@ RESOURCE DIALOG r_DCQ_wait_note_connecting
       DLG_LINE
       {
          type = EAknCtNote;
-         id = EDCQCommonWaitNoteConnecting;
+         id = EDCQCommonWaitNote;
          control = AVERELL_NOTE
                    {
                       layout = EWaitLayout;
-                      singular_label = STRING_r_mult_wait_note_connecting;
+                      singular_label = "TO BE SET BY APP";
                       //imagefile = "\\system\\data\\avkon.mbm";
                       //imageid = EMbmAvkonQgn_note_progress;
                       //imagemask = EMbmAvkonQgn_note_progress_mask;

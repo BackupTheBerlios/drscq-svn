@@ -21,6 +21,7 @@ Copyright (c) 2004 - 2006 Nokia Corporation.
 // INCLUDES
 #include <aknViewAppUi.h>
 #include <aknwaitdialog.h>
+#include <CommDbConnPref.h>
 
 #include "observer/MProgressObserver.h"
 #include "observer/MErrorObserver.h"
@@ -72,22 +73,26 @@ class CDCQAppUi : public CAknViewAppUi,
         */
         virtual void HandleResourceChangeL( TInt aType );
         
-    private: // Data
+    private:
        
-       void NotifyProgress( TProgressType aProgressType, TUint8 aPercentage );
+       void SelectIAP();
        
-       void NotifyError( TErrorObserverErrorType aErrorType, TErrorObserverInfoType aInfoType );
+       void NotifyProgress( TProgressInfoType aProgressType, TUint8 aPercentage );
+       
+       void NotifyError( TErrorObserverErrorType aErrorType, TErrorObserverInfoType aInfoType, TInt aErrorCode );
        
        void DialogDismissedL( TInt aButton );         
-                                                                              
-        /**
-        * iLoginView, The application login view
-        * Not owned by CDCQAppUi object.
-        */       
-        CDCQLoginView*       iLoginView;        
-        CICQClient*          iICQClient;                
-        CAknWaitDialog*      iWaitDialog;
-        bool                 iIdle;
+       
+       
+       TCommDbConnPref      iIAPPreferences;       
+       /**
+       * iLoginView, The application login view
+       * Not owned by CDCQAppUi object.
+       */       
+       CDCQLoginView*       iLoginView;        
+       CICQClient*          iICQClient;                
+       CAknWaitDialog*      iWaitDialog;
+       bool                 iIdle;
         
 };
 

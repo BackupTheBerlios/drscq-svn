@@ -43,22 +43,7 @@ CICQClient::~CICQClient()
    iProgressObserver = NULL;
    iErrorObserver = NULL;
    
-   if ( iSocketServer != NULL )
-   {
-      iSocketServer->Close();
-   }
-   delete iSocketServer;
-   iSocketServer = NULL;
-   
-   if ( iProtocol != NULL )
-   {
-      iProtocol->Close();
-   }
-   delete iProtocol;
-   iProtocol = NULL;
-   
-   iConnection.Close();
-   iClientStatus = EIdle;
+   Shutdown();
 }
 
 CICQClient* CICQClient::NewLC()
@@ -179,8 +164,7 @@ void CICQClient::Cancel()
    
    if ( iClientStatus == EOpening )
    {
-      iConnection.Close();
-      iClientStatus = EIdle;
+      iConnection.Close();     
    }
    else
    {
@@ -207,21 +191,16 @@ void CICQClient::Shutdown()
    if ( iSocketServer != NULL )
    {
       iSocketServer->Close();
+      delete iSocketServer;
+      iSocketServer = NULL;
    }
    
    if ( iProtocol != NULL )
    {
       iProtocol->Close();
+      delete iProtocol;
+      iProtocol = NULL;   
    }
-   
-   delete iSocketServer;
-   iSocketServer = NULL;
-   
-   delete iProtocol;
-   iProtocol = NULL;   
-   
-   iErrorObserver = NULL;
-   iProgressObserver = NULL;
    
    iClientStatus = EIdle;
 }
@@ -230,6 +209,8 @@ void CICQClient::Shutdown()
 
 void CICQClient::RunL()
 { 
+   ASSERT( iClientStatus == EOpening );
+   
    TInt statusCode = iStatus.Int();
    
    /** NO ERROR **/
@@ -289,7 +270,9 @@ void CICQClient::RunL()
             {
                iErrorObserver->NotifyError( TErrorObserverErrorTypes::EErrorWarning,
                                             TErrorObserverInfoTypes::ECanceled );
-            }            
+            }
+                     
+            iClientStatus = EIdle;            
             
             break;
          }

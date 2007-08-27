@@ -67,4 +67,3 @@ SOURCEPATH ..\src\clients
 SOURCE CICQClient.cpp
 
 
-CAPABILITY CommDD NetworkServices

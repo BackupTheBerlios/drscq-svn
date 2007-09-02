@@ -101,7 +101,6 @@ class CSocketServer : public CActive, public MTimeOutObserver
       TSocketServerState   iServerStatus;
       CSocketTransmitter*  iTransmitter;
       CSocketReceiver*     iReceiver;
-      MSocketObserver*     iSocketObserver;
       MErrorObserver*      iErrorObserver;
       MProgressObserver*   iProgressObserver;
       TUint                iTimeout;

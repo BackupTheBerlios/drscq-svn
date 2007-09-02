@@ -22,7 +22,6 @@ CSocketServer::CSocketServer()
    iServerStatus ( EIdle ),
    iTransmitter ( NULL ),
    iReceiver( NULL ),
-   iSocketObserver( NULL ),
    iErrorObserver( NULL ),
    iProgressObserver( NULL ),
    iTimeout( 0 ),
@@ -78,8 +77,7 @@ CSocketServer::~CSocketServer()
    delete iTimer;
    iSocket.Close();
    iSocketServ.Close();
-   
-   iSocketObserver = NULL;
+
    iErrorObserver = NULL;
    iProgressObserver = NULL;
 }

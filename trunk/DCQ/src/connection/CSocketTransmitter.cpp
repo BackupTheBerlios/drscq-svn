@@ -48,7 +48,7 @@ void CSocketTransmitter::ConstructL( RSocket* aSocket )
 
 CSocketTransmitter::~CSocketTransmitter()
 {
-   Cancel(); // Cancel any request, if outstanding
+   Cancel(); // CancelCurrentAction any request, if outstanding
    
    delete iByteBuffer;
    iByteBuffer = NULL;  
@@ -109,7 +109,7 @@ void CSocketTransmitter::RunL()
          // Character has been written to socket
          case ESending:
             {
-               // Cancel TimeOut timer
+               // CancelCurrentAction TimeOut timer
                if ( iTimer != NULL )
                {
                   iTimer->Cancel(); 

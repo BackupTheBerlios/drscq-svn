@@ -48,7 +48,7 @@ void CSocketReceiver::ConstructL( RSocket* aSocket )
 
 CSocketReceiver::~CSocketReceiver()
 {
-   Cancel(); // Cancel any request, if outstanding
+   Cancel(); // CancelCurrentAction any request, if outstanding
    
    delete iMultiByteBuffer;
    iMultiByteBuffer = NULL;
@@ -141,7 +141,7 @@ void CSocketReceiver::RunL()
                   }
                }
                
-               // Cancel TimeOut timer
+               // CancelCurrentAction TimeOut timer
                if ( iTimer != NULL )
                {
                   iTimer->Cancel(); 

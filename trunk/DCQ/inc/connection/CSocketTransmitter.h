@@ -29,7 +29,7 @@ class CSocketTransmitter : public CActive, public MTimeOutObserver
       };
       
    public:
-      // Cancel and destroy
+      // CancelCurrentAction and destroy
       ~CSocketTransmitter();
 
       // Two-phased constructor.

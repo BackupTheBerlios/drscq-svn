@@ -82,15 +82,6 @@ void CDCQAppUi::HandleCommandL( TInt aCommand )
    {
       case EDCQLoginViewDoLogin :
       {   
-         if ( iIdle 
-             && iICQClient != NULL 
-             && !iICQClient->IsConnected() )
-         {            
-            SelectIAP();
-            
-            iIdle = false;                        
-            iICQClient->ConnectL( _L("www.google.de"), 80, iIAPPreferences );            
-         }
          break;
       }
       case EEikCmdExit:
@@ -138,7 +129,7 @@ void CDCQAppUi::DialogDismissedL( TInt /* aButton */ )
 {
    if ( iICQClient != NULL )
    {
-      iICQClient->Cancel();
+      iICQClient->CancelCurrentAction();
    }
    
    if ( iWaitDialog != NULL )

@@ -7,35 +7,23 @@
  Description : CICQClient implementation
 ============================================================================
 */
-
-#include <CommDbConnPref.h>
-
 #include "clients/CICQClient.h"
 
 #include "observer/MProgressObserver.h"
 #include "observer/MErrorObserver.h"
 
-#include "connection/CSocketServer.h"
-
 #include "protocols/OSCARv7v8v9/OSCARProtocol.h"
 
-static const TUint32 INVALID_ADDRESS       = 0;
-static const TUint16 INVALID_PORT          = 0;
-static const TUint   TIMEOUT_CONNECT_MS    = 10000000; // 10 sec
 
 CICQClient::CICQClient()
-: CActive( EPriorityStandard ),
-  iClientStatus( EIdle ),
-  iProgressObserver( NULL ),
+: iProgressObserver( NULL ),
   iErrorObserver( NULL ),
   iConnection(),
-  iSocketServer( NULL ),
   iProtocol( NULL ),
-  iAddr( INVALID_ADDRESS ),
-  iPort( INVALID_PORT ),
-  iName()
+  iConnectionPrefs()
 {
 }
+
 
 
 CICQClient::~CICQClient()
@@ -43,8 +31,11 @@ CICQClient::~CICQClient()
    iProgressObserver = NULL;
    iErrorObserver = NULL;
    
+   CancelCurrentAction();
    Shutdown();
 }
+
+
 
 CICQClient* CICQClient::NewLC()
 {
@@ -54,6 +45,8 @@ CICQClient* CICQClient::NewLC()
 	return self;
 }
 
+
+
 CICQClient* CICQClient::NewL()
 {
 	CICQClient* self = CICQClient::NewLC();
@@ -61,10 +54,17 @@ CICQClient* CICQClient::NewL()
 	return self;
 }
 
+
+
 void CICQClient::ConstructL()
 {
-   CActiveScheduler::Add( this );
+   iProtocol = Protocol::COSCARProtocol::NewL();
+   CleanupStack::PushL( iProtocol );
+   iProtocol->OpenL();
+   CleanupStack::Pop( iProtocol );
 }
+
+
 
 void CICQClient::RegisterProgressObserver( MProgressObserver* aProgressObserver )
 {
@@ -80,102 +80,94 @@ void CICQClient::RegisterErrorObsrerver( MErrorObserver* aErrorObserer )
 
 
 
-void CICQClient::OpenL( TCommDbConnPref& aConPrefs )
+void CICQClient::SetConnectionPreferences( TUint   aBearer, 
+                                           TBool   aShowDialog, 
+                                           TUint32 aIapId /* = KUndefinedIAPid */ )
 {
-   if ( iClientStatus == EIdle )
+   iConnectionPrefs.SetDirection( ECommDbConnectionDirectionOutgoing );
+   
+   if ( aShowDialog )
    {
-      iClientStatus = EOpening;
-      
-      iProgressObserver->NotifyProgress( TProgressInfoTypes::EOpeningConnection );
-      
-      iProtocol = Protocol::COSCARProtocol::NewL();
-      CleanupStack::PushL( iProtocol );
-      iProtocol->OpenL();
-      
-      iSocketServer = CSocketServer::NewL();
-      CleanupStack::PushL( iSocketServer );
-      iSocketServer->OpenL();
-      
-      iConnection.Open( iSocketServer->GetSocketServInstance() );
-      iConnection.Start( aConPrefs, iStatus );
-      
-      CleanupStack::Pop( iSocketServer );
-      CleanupStack::Pop( iProtocol );      
-   }   
-}
-
-
-void CICQClient::ConnectL( TUint32 aAddr, TUint16 aPort, TCommDbConnPref& aConPrefs )
-{
-   if ( ( iClientStatus == EIdle ) && ( aAddr != INVALID_ADDRESS ) && ( aPort != INVALID_PORT ) )
-   {
-      iAddr = aAddr;
-      iPort = aPort;
-      OpenL( aConPrefs );
-      SetActive();
+      iConnectionPrefs.SetDialogPreference( ECommDbDialogPrefPrompt );
    }
-   else if ( iErrorObserver != NULL )
+   else
    {
-      iErrorObserver->NotifyError( TErrorObserverErrorTypes::EErrorWarning,
-                                   TErrorObserverInfoTypes::EConnectionAlreadyExists );
+      iConnectionPrefs.SetDialogPreference( ECommDbDialogPrefDoNotPrompt );
    }
-}
-
-
-
-void CICQClient::ConnectL( const TDesC& aServerName, TUint16 aPort, TCommDbConnPref& aConPrefs )
-{   
-   if ( ( iClientStatus == EIdle ) && ( aServerName.Length() > 0 ) && ( aPort != INVALID_PORT ) )
-   {
-      iName.Copy( aServerName );
-      iPort = aPort;
-      OpenL( aConPrefs );     
-      SetActive();
-   }
-   else if ( iErrorObserver != NULL )
-   {
-      iErrorObserver->NotifyError( TErrorObserverErrorTypes::EErrorWarning,
-                                   TErrorObserverInfoTypes::EConnectionAlreadyExists );
-   }
+   
+   iConnectionPrefs.SetIapId( aIapId );
+   iConnectionPrefs.SetBearerSet( aBearer );
+   iConnectionPrefs.SetDirection( ECommDbConnectionDirectionOutgoing );
 }
 
 
 
 TBool CICQClient::IsConnected() const
 {
-   TBool aConnected = false;
-   
-   if ( iSocketServer != NULL )
+   // Check if there is an active connection
+   TBool connected = EFalse;
+
+   if ( iConnectionPrefs.IapId() != KUndefinedIAPid )
    {
-      aConnected = iSocketServer->IsConnected();
+      TUint connectionCount;
+      //Enumerate currently active connections across all socket servers
+      if ( iConnection.EnumerateConnections( connectionCount ) == KErrNone )
+      {
+         if ( connectionCount > 0 )
+         {
+            TPckgBuf < TConnectionInfoV2 > connectionInfo;
+            
+            for ( TUint i = 1; !connected && ( i <= connectionCount ); ++i )
+            {
+               iConnection.GetConnectionInfo( i, connectionInfo );
+              
+               if ( connectionInfo().iIapId == iConnectionPrefs.IapId() )
+               {   
+                  connected = ETrue;
+               }
+            }
+         }
+      }  
    }
    
-   return aConnected;
+   return connected;
 }
 
 
 
-void CICQClient::Cancel()
+RConnection& CICQClient::GetConnection()
+{
+   return iConnection;
+}
+
+
+
+const RConnection& CICQClient::GetConnection() const
+{
+   return iConnection;
+}
+
+
+
+TCommDbConnPref& CICQClient::GetConnectionPreferences()
+{
+   return iConnectionPrefs;
+}
+
+
+
+const TCommDbConnPref& CICQClient::GetConnectionPreferences() const
+{
+   return iConnectionPrefs;
+}
+
+
+
+void CICQClient::CancelCurrentAction()
 {    
-   if ( iProgressObserver != NULL )
+   if ( iProtocol != NULL )
    {
-      iProgressObserver->NotifyProgress( TProgressInfoTypes::ECancelingProgress );
-   }
-   
-   if ( iClientStatus == EOpening )
-   {
-      iConnection.Close();     
-   }
-   else
-   {
-      if ( iProtocol != NULL )
-      {
-         iProtocol->Cancel();
-      }
-      if ( iSocketServer != NULL )
-      {
-         iSocketServer->Cancel();
-      }     
+      iProtocol->Cancel();
    }
 }
 
@@ -188,12 +180,7 @@ void CICQClient::Shutdown()
       iConnection.Close();
    }
    
-   if ( iSocketServer != NULL )
-   {
-      iSocketServer->Close();
-      delete iSocketServer;
-      iSocketServer = NULL;
-   }
+   iConnectionPrefs = TCommDbConnPref();
    
    if ( iProtocol != NULL )
    {
@@ -201,106 +188,4 @@ void CICQClient::Shutdown()
       delete iProtocol;
       iProtocol = NULL;   
    }
-   
-   iClientStatus = EIdle;
 }
-
-
-
-void CICQClient::RunL()
-{ 
-   ASSERT( iClientStatus == EOpening );
-   
-   TInt statusCode = iStatus.Int();
-   
-   /** NO ERROR **/
-   if ( statusCode == KErrNone )
-   {
-      // Connection created succesfully
-      iClientStatus = EOpen;
-      
-      if ( iAddr != INVALID_ADDRESS )
-      {
-         iSocketServer->ConnectL( iAddr, iPort, 
-                                  TIMEOUT_CONNECT_MS, 
-                                  iErrorObserver,
-                                  iProgressObserver );
-      }
-      else
-      {
-         iSocketServer->ConnectL( iName, iPort, 
-                                  TIMEOUT_CONNECT_MS, 
-                                  iErrorObserver,
-                                  iProgressObserver );
-      }    
-   } // end if
-   
-   /** CONNECTION ALREADY EXISTS **/
-   else if ( statusCode == KErrAlreadyExists )
-   {
-      if ( iErrorObserver != NULL )
-      {
-         iErrorObserver->NotifyError( TErrorObserverErrorTypes::EErrorWarning,
-                                      TErrorObserverInfoTypes::EConnectionAlreadyExists );
-      }
-      iClientStatus = EOpen;
-   }
-   
-   /** ERROR OCCURED **/
-   else
-   {
-      switch ( statusCode )
-      {         
-         case KErrNotFound: // Connection failed
-         {
-            if ( iErrorObserver != NULL )
-            {
-               iErrorObserver->NotifyError( TErrorObserverErrorTypes::EErrorCritical,
-                                            TErrorObserverInfoTypes::EConnectionFailed,
-                                            statusCode );
-            }
-            
-            Shutdown();
-            
-            break;
-         }
-         case KErrCancel: // Connection attempt cancelled
-         {
-            if ( iErrorObserver != NULL )
-            {
-               iErrorObserver->NotifyError( TErrorObserverErrorTypes::EErrorWarning,
-                                            TErrorObserverInfoTypes::ECanceled );
-            }
-                     
-            iClientStatus = EIdle;            
-            
-            break;
-         }
-         
-         default:
-         {
-            if ( iErrorObserver != NULL )
-            {
-               iErrorObserver->NotifyError( TErrorObserverErrorTypes::EErrorCritical,
-                                            TErrorObserverInfoTypes::EErrorUnknown,
-                                            statusCode );
-            }
-            
-            Shutdown();
-            
-            break;
-         }
-         
-       } // end switch       
-            
-    } // end else
-}
-
-
-
-void CICQClient::DoCancel()
-{
-   
-}
-
-

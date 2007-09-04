@@ -232,7 +232,7 @@ void CSocketServer::RunL()
                                              TErrorObserverInfoTypes::ESuccessful );                                                  
              }  
              iServerStatus = EConnected;
-             // Cancel TimeOut timer before completion
+             // CancelCurrentAction TimeOut timer before completion
              iTimer->Cancel(); 
           }
           else
@@ -244,7 +244,7 @@ void CSocketServer::RunL()
                 iErrorObserver->NotifyError( TErrorObserverErrorTypes::EErrorCritical,
                                              TErrorObserverInfoTypes::EConnectionFailed );
              }
-             // Cancel TimeOut timer before completion
+             // CancelCurrentAction TimeOut timer before completion
              iTimer->Cancel(); 
           }
           break;
@@ -278,7 +278,7 @@ void CSocketServer::RunL()
                 iErrorObserver->NotifyError( TErrorObserverErrorTypes::EErrorCritical,
                                              TErrorObserverInfoTypes::EDNSFailure );
              }
-             // Cancel TimeOut timer before completion
+             // CancelCurrentAction TimeOut timer before completion
              iTimer->Cancel(); 
           }
           break;
@@ -291,7 +291,7 @@ void CSocketServer::DoCancel()
 {
    iTimer->Cancel();
 
-   // Cancel appropriate request to socket
+   // CancelCurrentAction appropriate request to socket
    switch ( iServerStatus )
    {
       case EConnecting:
@@ -301,7 +301,7 @@ void CSocketServer::DoCancel()
       }         
       case ELookingUp:
       {
-         // Cancel look up attempt
+         // CancelCurrentAction look up attempt
          iResolver.Cancel();
          iResolver.Close();
          break;

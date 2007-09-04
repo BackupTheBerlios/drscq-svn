@@ -28,7 +28,7 @@ class CSocketReceiver : public CActive, public MTimeOutObserver
       };
    
    public:
-      // Cancel and destroy
+      // CancelCurrentAction and destroy
       ~CSocketReceiver();
 
       // Two-phased constructor.

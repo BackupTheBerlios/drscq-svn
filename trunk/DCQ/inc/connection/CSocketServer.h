@@ -36,7 +36,7 @@ class CSocketServer : public CActive, public MTimeOutObserver
       };
       
    public:
-      // Cancel and destroy
+      // CancelCurrentAction and destroy
       ~CSocketServer();
 
       // Two-phased constructor.

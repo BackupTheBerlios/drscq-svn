@@ -12,15 +12,18 @@
 #define CICQCLIENT_H
 
 // INCLUDES
-#include <e32cons.h>
-#include <es_sock.h>
-#include <nifman.h>
+#include <e32base.h>
+#include <CommDbConnPref.h>
+#include <es_enum.h>
 
 class MProgressObserver;
 class MErrorObserver;
-class CSocketServer;
 namespace Protocol { class COSCARProtocol; }
 class TCommDbConnPref;
+
+
+// CONSTANTS
+static const TUint32 KUndefinedIAPid = 0x00;
 
 // CLASS DECLARATION
 
@@ -28,17 +31,8 @@ class TCommDbConnPref;
 *  CICQClient
 * 
 */
-class CICQClient : public CActive
-{
-   public:
-      
-      enum TICQClientStates
-      {
-         EIdle,
-         EOpening,
-         EOpen
-      };
-      
+class CICQClient : public CBase
+{     
    public: // Constructors and destructor
    
    	/**
@@ -59,15 +53,34 @@ class CICQClient : public CActive
       
       void RegisterProgressObserver( MProgressObserver* aProgressObserver );
            
-      void RegisterErrorObsrerver( MErrorObserver* aErrorObserer );     
-           
-      void ConnectL( TUint32 aAddr, TUint16 aPort, TCommDbConnPref& aConPrefs );
+      void RegisterErrorObsrerver( MErrorObserver* aErrorObserer );
       
-      void ConnectL( const TDesC& aServerName, TUint16 aPort, TCommDbConnPref& aConPrefs );     
+      /*
+       * SetConnectionPreferences()
+       *  
+       * Sets connection preferences
+       *
+       * Params:
+       * TUint aBearer    Bearer type
+       * TBool aDialog    Show dialog? 
+       * TUint32 aIapId   IAP to be connected, default KUndefinedIAPid
+       *
+       */
+      void SetConnectionPreferences( TUint   aBearer, 
+                                     TBool   aShowDialog, 
+                                     TUint32 aIapId = KUndefinedIAPid );
+     
+      RConnection& GetConnection();
+      
+      const RConnection& GetConnection() const;
+      
+      TCommDbConnPref& GetConnectionPreferences();
+      
+      const TCommDbConnPref& GetConnectionPreferences() const;
       
       TBool IsConnected() const;
       
-      void Cancel();
+      void CancelCurrentAction();
       
       void Shutdown();     
    
@@ -81,30 +94,15 @@ class CICQClient : public CActive
    	/**
    		* EPOC default constructor for performing 2nd stage construction
    		*/
-   	void ConstructL();
-      
-      void OpenL( TCommDbConnPref& aConPrefs );      
-      
-       // From CActive
-      // Handle completion
-      void RunL();
-
-      // How to cancel me
-      void DoCancel();
+   	void ConstructL();     
       
    private:
       
-      TICQClientStates          iClientStatus;
-      MProgressObserver*        iProgressObserver;
-      MErrorObserver*           iErrorObserver;
-      RConnection               iConnection;
-      CSocketServer*            iSocketServer;
-      Protocol::COSCARProtocol* iProtocol;
-      
-      TUint32                   iAddr;
-      TUint16                   iPort;    
-      TBuf < KMaxSockAddrSize > iName;
-      
+      MProgressObserver*           iProgressObserver;
+      MErrorObserver*              iErrorObserver;
+      mutable RConnection          iConnection;
+      Protocol::COSCARProtocol*    iProtocol;
+      mutable TCommDbConnPref      iConnectionPrefs;
 };
 
 #endif // CICQCLIENT_H

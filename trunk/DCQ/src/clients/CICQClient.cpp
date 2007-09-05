@@ -8,18 +8,16 @@
 ============================================================================
 */
 #include "clients/CICQClient.h"
+#include "clients/OSCARConstants.h"
 
 #include "observer/MProgressObserver.h"
 #include "observer/MErrorObserver.h"
-
-#include "protocols/OSCARv7v8v9/OSCARProtocol.h"
 
 
 CICQClient::CICQClient()
 : iProgressObserver( NULL ),
   iErrorObserver( NULL ),
   iConnection(),
-  iProtocol( NULL ),
   iConnectionPrefs()
 {
 }
@@ -64,6 +62,16 @@ void CICQClient::ConstructL()
    CleanupStack::Pop( iProtocol );
 }
 
+
+TUint CICQClient::GetProtocolId() const
+{
+   return static_cast < TUint > ( K_PROTOCOL_ID );
+}
+
+const TPtrC CICQClient::GetProtocolDescription() const
+{
+   return TPtrC( K_PROTOCOL_DESC );
+}
 
 
 void CICQClient::RegisterProgressObserver( MProgressObserver* aProgressObserver )
@@ -165,10 +173,7 @@ const TCommDbConnPref& CICQClient::GetConnectionPreferences() const
 
 void CICQClient::CancelCurrentAction()
 {    
-   if ( iProtocol != NULL )
-   {
-      iProtocol->Cancel();
-   }
+ 
 }
 
 
@@ -181,11 +186,4 @@ void CICQClient::Shutdown()
    }
    
    iConnectionPrefs = TCommDbConnPref();
-   
-   if ( iProtocol != NULL )
-   {
-      iProtocol->Close();
-      delete iProtocol;
-      iProtocol = NULL;   
-   }
 }

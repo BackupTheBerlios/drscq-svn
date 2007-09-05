@@ -12,13 +12,12 @@
 #define CICQCLIENT_H
 
 // INCLUDES
-#include <e32base.h>
+#include <e32cons.h>
 #include <CommDbConnPref.h>
 #include <es_enum.h>
 
 class MProgressObserver;
 class MErrorObserver;
-namespace Protocol { class COSCARProtocol; }
 class TCommDbConnPref;
 
 
@@ -31,7 +30,7 @@ static const TUint32 KUndefinedIAPid = 0x00;
 *  CICQClient
 * 
 */
-class CICQClient : public CBase
+class CICQClient : public CActive
 {     
    public: // Constructors and destructor
    
@@ -50,6 +49,9 @@ class CICQClient : public CBase
    		*/
    	static CICQClient* NewLC();
       
+      TUint GetProtocolId() const;
+
+      const TPtrC GetProtocolDescription() const;     
       
       void RegisterProgressObserver( MProgressObserver* aProgressObserver );
            
@@ -78,11 +80,15 @@ class CICQClient : public CBase
       
       const TCommDbConnPref& GetConnectionPreferences() const;
       
-      TBool IsConnected() const;
-      
+      TBool IsConnected() const;           
+
+      void LoginL();
+
+      void LogoutL();
+            
       void CancelCurrentAction();
       
-      void Shutdown();     
+      void Shutdown();
    
    private:
    
@@ -101,7 +107,6 @@ class CICQClient : public CBase
       MProgressObserver*           iProgressObserver;
       MErrorObserver*              iErrorObserver;
       mutable RConnection          iConnection;
-      Protocol::COSCARProtocol*    iProtocol;
       mutable TCommDbConnPref      iConnectionPrefs;
 };
 

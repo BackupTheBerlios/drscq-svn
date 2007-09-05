@@ -19,6 +19,7 @@
 class MProgressObserver;
 class MErrorObserver;
 class TCommDbConnPref;
+class CSocketServer;
 
 
 // CONSTANTS
@@ -32,6 +33,13 @@ static const TUint32 KUndefinedIAPid = 0x00;
 */
 class CICQClient : public CActive
 {     
+   public:
+      
+      enum TICQClientStatus
+      {
+         EIdle = 0
+      };
+      
    public: // Constructors and destructor
    
    	/**
@@ -49,9 +57,9 @@ class CICQClient : public CActive
    		*/
    	static CICQClient* NewLC();
       
-      TUint GetProtocolId() const;
+      static TUint GetProtocolId();
 
-      const TPtrC GetProtocolDescription() const;     
+      static const TPtrC GetProtocolDescription();
       
       void RegisterProgressObserver( MProgressObserver* aProgressObserver );
            
@@ -100,14 +108,22 @@ class CICQClient : public CActive
    	/**
    		* EPOC default constructor for performing 2nd stage construction
    		*/
-   	void ConstructL();     
+   	void ConstructL();
+      
+      // CActive implementations
+      
+      void RunL();
+      
+      void DoCancel();
       
    private:
       
-      MProgressObserver*           iProgressObserver;
-      MErrorObserver*              iErrorObserver;
-      mutable RConnection          iConnection;
-      mutable TCommDbConnPref      iConnectionPrefs;
+      TICQClientStatus        iClientStatus;
+      MProgressObserver*      iProgressObserver;
+      MErrorObserver*         iErrorObserver;
+      mutable RConnection     iConnection;
+      mutable TCommDbConnPref iConnectionPrefs;
+      CSocketServer*          iSocketServer;
 };
 
 #endif // CICQCLIENT_H

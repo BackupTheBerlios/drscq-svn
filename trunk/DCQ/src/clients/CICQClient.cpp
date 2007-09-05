@@ -10,27 +10,33 @@
 #include "clients/CICQClient.h"
 #include "clients/OSCARConstants.h"
 
+#include "connection/CSocketServer.h"
+
 #include "observer/MProgressObserver.h"
 #include "observer/MErrorObserver.h"
 
 
 CICQClient::CICQClient()
-: iProgressObserver( NULL ),
+: CActive( EPriorityNormal ),
+  iClientStatus( EIdle ),
+  iProgressObserver( NULL ),
   iErrorObserver( NULL ),
   iConnection(),
-  iConnectionPrefs()
+  iConnectionPrefs(),
+  iSocketServer( NULL )
 {
+   SetConnectionPreferences( ECommDbBearerUnknown, ETrue );
 }
 
 
 
 CICQClient::~CICQClient()
-{
-   iProgressObserver = NULL;
-   iErrorObserver = NULL;
-   
+{   
    CancelCurrentAction();
    Shutdown();
+   
+   iProgressObserver = NULL;
+   iErrorObserver = NULL;
 }
 
 
@@ -56,19 +62,18 @@ CICQClient* CICQClient::NewL()
 
 void CICQClient::ConstructL()
 {
-   iProtocol = Protocol::COSCARProtocol::NewL();
-   CleanupStack::PushL( iProtocol );
-   iProtocol->OpenL();
-   CleanupStack::Pop( iProtocol );
+   // creates a new CSocketServer instance and connects to
+   // the RSocketServ during construction.
+   iSocketServer = CSocketServer::NewL();
 }
 
 
-TUint CICQClient::GetProtocolId() const
+TUint CICQClient::GetProtocolId()
 {
    return static_cast < TUint > ( K_PROTOCOL_ID );
 }
 
-const TPtrC CICQClient::GetProtocolDescription() const
+const TPtrC CICQClient::GetProtocolDescription()
 {
    return TPtrC( K_PROTOCOL_DESC );
 }
@@ -185,5 +190,26 @@ void CICQClient::Shutdown()
       iConnection.Close();
    }
    
+   if ( iSocketServer != NULL )
+   {
+      iSocketServer->Close();
+      delete iSocketServer;
+      iSocketServer = NULL;
+   }
+   
    iConnectionPrefs = TCommDbConnPref();
+}
+
+
+
+void CICQClient::RunL()
+{
+   
+}
+
+
+
+void CICQClient::DoCancel()
+{
+   
 }

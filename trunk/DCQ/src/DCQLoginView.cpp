@@ -27,6 +27,8 @@
 #include "DCQLoginViewSettings.h"
 #include "DCQdocument.h"
 
+#include "clients/CICQClient.h"
+
 // ========================= MEMBER FUNCTIONS ==================================
 
 _LIT(KLoginViewSettingsFile, "LoginSet.dat");
@@ -123,37 +125,37 @@ void CDCQLoginView::HandleCommandL( TInt aCommand)
       case EDCQCommonAbout :
       { 
          // retrieve document...
-         CDCQDocument * iDoc = static_cast < CDCQDocument * > ( AppUi()->Document() );                 
-         
-         // ...check, if document is not NULL
-         if ( iDoc != NULL )
-         {
-            // ... if not, query currrently available protocols
-            CDesCArrayFlat * protocols = new ( ELeave ) CDesCArrayFlat( 10 );
-            
-            CleanupStack::PushL( protocols );            
-            if ( iDoc->EnumeratePossibleProtocolsL( *protocols ) )
-            {
-               CAknStaticNoteDialog* dlg = new ( ELeave ) CAknStaticNoteDialog;
-               
-               // ...and prepare infos...
-               CleanupStack::PushL( dlg );
-               dlg->PrepareLC( R_DCQ_INFO_STATIC_NOTIFICATION );
-               dlg->SetNumberOfBorders( 4 );
-               dlg->SetTextNumberL( protocols->Count() );
-               CleanupStack::Pop( dlg );
-               
-               // ...and run dialog...
-               // dialog will delete itself after closing
-               dlg->RunLD();
-            }            
-            CleanupStack::PopAndDestroy( protocols );
-            
-         }
-         else
-         {            
-            ASSERT( 0 );
-         }                 
+//         CDCQDocument * iDoc = static_cast < CDCQDocument * > ( AppUi()->Document() );                 
+//         
+//         // ...check, if document is not NULL
+//         if ( iDoc != NULL )
+//         {
+//            // ... if not, query currrently available protocols
+//            CDesCArrayFlat * protocols = new ( ELeave ) CDesCArrayFlat( 10 );
+//            
+//            CleanupStack::PushL( protocols );            
+//            if ( iDoc->EnumeratePossibleProtocolsL( *protocols ) )
+//            {
+//               CAknStaticNoteDialog* dlg = new ( ELeave ) CAknStaticNoteDialog;
+//               
+//               // ...and prepare infos...
+//               CleanupStack::PushL( dlg );
+//               dlg->PrepareLC( R_DCQ_INFO_STATIC_NOTIFICATION );
+//               dlg->SetNumberOfBorders( 4 );
+//               dlg->SetTextNumberL( protocols->Count() );
+//               CleanupStack::Pop( dlg );
+//               
+//               // ...and run dialog...
+//               // dialog will delete itself after closing
+//               dlg->RunLD();
+//            }            
+//            CleanupStack::PopAndDestroy( protocols );
+//            
+//         }
+//         else
+//         {            
+//            ASSERT( 0 );
+//         }                 
          break;
       }
       default:

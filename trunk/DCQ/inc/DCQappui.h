@@ -73,6 +73,8 @@ class CDCQAppUi : public CAknViewAppUi,
         */
         virtual void HandleResourceChangeL( TInt aType );
         
+        
+        
     private:
        
        void SelectIAP();

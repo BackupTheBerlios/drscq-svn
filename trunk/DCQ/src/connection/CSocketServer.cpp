@@ -54,6 +54,9 @@ void CSocketServer::ConstructL()
 {
    iTimer = CTimeOutTimer::NewL( EPriorityHigh, *this );
    
+   // Open channel to Socket Server
+   User::LeaveIfError( iSocketServ.Connect() );
+  
    CActiveScheduler::Add( this); // Add to scheduler
 }
 
@@ -82,11 +85,10 @@ CSocketServer::~CSocketServer()
    iProgressObserver = NULL;
 }
 
-void CSocketServer::OpenL()
+
+
+void CSocketServer::InitL()
 {
-   // Open channel to Socket Server
-   User::LeaveIfError( iSocketServ.Connect() );
-   
    // Open a TCP socket
    User::LeaveIfError( iSocket.Open( iSocketServ, KAfInet, KSockStream, KProtocolInetTcp ) );
    
@@ -94,19 +96,7 @@ void CSocketServer::OpenL()
    iTransmitter = CSocketTransmitter::NewL( &iSocket );
 }
 
-void CSocketServer::TransmitL( const TPtrC&      aTransmittedData, 
-                               MSocketObserver*  aObserver /* = NULL */,
-                               TUint             aTimeout /* = 0 */ )
-{
-   
-}
 
-void CSocketServer::ReceiveL( MSocketObserver&   aObserver,
-                              TUint              aBlockUntil /* = 0 */,
-                              TUint              aTimeout /* = 0 */ )
-{
-   
-}
 
 void CSocketServer::ConnectL( TUint32            aAddr,
                               TUint16            aPort,
@@ -135,6 +125,8 @@ void CSocketServer::ConnectL( TUint32            aAddr,
    }
 }
 
+
+
 void CSocketServer::ConnectResolvedL( TUint32 aAddr, TUint16 aPort )
 {
    iPort = aPort;
@@ -150,6 +142,8 @@ void CSocketServer::ConnectResolvedL( TUint32 aAddr, TUint16 aPort )
    
    SetActive();
 }
+
+
 
 void CSocketServer::ConnectL( const TDesC&       aServerName,
                               TUint16            aPort,
@@ -181,10 +175,54 @@ void CSocketServer::ConnectL( const TDesC&       aServerName,
 }
 
 
+
 TBool CSocketServer::IsConnected() const
 {
    return ( iServerStatus == EConnected );
 }
+
+
+
+CSocketReceiver* CSocketServer::GetSocketReceiver()
+{
+   return iReceiver;
+}
+
+
+
+const CSocketReceiver* CSocketServer::GetSocketReceiver() const
+{
+   return iReceiver;
+}
+
+
+
+CSocketTransmitter* CSocketServer::GetSocketTransmitter()
+{
+   return iTransmitter;
+}
+
+
+
+const CSocketTransmitter* CSocketServer::GetSocketTransmitter() const
+{
+   return iTransmitter;
+}
+
+
+
+RSocketServ& CSocketServer::GetSocketServInstance()
+{
+   return iSocketServ;
+}
+
+
+
+const RSocketServ& CSocketServer::GetSocketServInstance() const
+{
+   return iSocketServ;
+}
+
 
 
 void CSocketServer::Close()
@@ -207,11 +245,6 @@ void CSocketServer::Close()
    iServerStatus = EIdle;
 }
 
-
-RSocketServ& CSocketServer::GetSocketServInstance()
-{
-   return iSocketServ;
-}
 
 
 void CSocketServer::RunL()
@@ -287,6 +320,8 @@ void CSocketServer::RunL()
    };
 }
 
+
+
 void CSocketServer::DoCancel()
 {
    iTimer->Cancel();
@@ -320,6 +355,8 @@ void CSocketServer::DoCancel()
                                    TErrorObserverInfoTypes::ECanceled );
    }
 }
+
+
 
 void CSocketServer::TimerExpired()
 {

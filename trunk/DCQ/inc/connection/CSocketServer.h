@@ -48,16 +48,8 @@ class CSocketServer : public CActive, public MTimeOutObserver
    public:
       // New functions
 
-      void OpenL();
+      void InitL();
 
-      void TransmitL( const TPtrC&      aTransmittedData, 
-                      MSocketObserver*  aObserver = NULL,
-                      TUint             aTimeout = 0 );
-
-      void ReceiveL( MSocketObserver&   aObserver,
-                     TUint              aBlockUntil = 0,
-                     TUint              aTimeout = 0 );
-      
       void ConnectL( TUint32            aAddr,
                      TUint16            aPort,
                      TUint              aTimeout = 0,
@@ -72,9 +64,21 @@ class CSocketServer : public CActive, public MTimeOutObserver
 
       TBool IsConnected() const;
       
-      void Close();     
+      CSocketReceiver* GetSocketReceiver();
+      
+      const CSocketReceiver* GetSocketReceiver() const;
+      
+      CSocketTransmitter* GetSocketTransmitter();
+      
+      const CSocketTransmitter* GetSocketTransmitter() const;
       
       RSocketServ& GetSocketServInstance();
+      
+      const RSocketServ& GetSocketServInstance() const;
+
+      void Close();     
+      
+
 
    private:
       // C++ constructor

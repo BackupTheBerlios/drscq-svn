@@ -18,8 +18,6 @@ Copyright (c) 2004 - 2006 Nokia Corporation.
 #include "DCQAppUi.h"
 #include "DCQDocument.h"
 
-#include "protocols/OSCARv7v8v9/OSCARProtocol.h"
-
 
 // ========================= MEMBER FUNCTIONS ==================================
 
@@ -30,8 +28,7 @@ Copyright (c) 2004 - 2006 Nokia Corporation.
 // -----------------------------------------------------------------------------
 //
 CDCQDocument::CDCQDocument( CEikApplication& aApp ) 
-   : CAknDocument( aApp ),
-     iOSCARProtocol( NULL )
+   : CAknDocument( aApp )
     {
        // No implementation required
     }
@@ -69,12 +66,7 @@ CDCQDocument* CDCQDocument::NewLC( CEikApplication& aApp )
 //
 void CDCQDocument::ConstructL()
     {
-      // check if we don't have already an protocol instance
-      if ( iOSCARProtocol == NULL ) 
-      {
-         // ...if not so, create a new one
-         iOSCARProtocol = Protocol::COSCARProtocol::NewL();
-      }
+      
     }
 
 // -----------------------------------------------------------------------------
@@ -84,11 +76,7 @@ void CDCQDocument::ConstructL()
 //
 CDCQDocument::~CDCQDocument()
     {
-      if ( iOSCARProtocol != NULL )
-      {
-         delete iOSCARProtocol;
-         iOSCARProtocol = NULL;
-      }
+     
     }
 
 // -----------------------------------------------------------------------------
@@ -100,22 +88,5 @@ CEikAppUi* CDCQDocument::CreateAppUiL()
     {
     return( static_cast<CEikAppUi*>( new ( ELeave ) CDCQAppUi ) );
     }
-
-
-bool CDCQDocument::EnumeratePossibleProtocolsL( CDesCArrayFlat& protocols ) const
-{
-   bool ok = false;
-   
-   // check if there is an instance of OSCAR protocol
-   if ( iOSCARProtocol != NULL )
-   {
-      // ...if so, add the description to result array
-      const TPtrC desc( iOSCARProtocol->GetProtocolDescription() );
-      protocols.AppendL( desc );
-      ok = true;
-   }
-   
-   return ok;
-}
 
 // End of File

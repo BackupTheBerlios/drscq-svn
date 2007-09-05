@@ -1,8 +1,7 @@
 #ifndef OSCARCONSTANTS_H_
 #define OSCARCONSTANTS_H_
 
-namespace Protocol
-{
+
    _LIT(K_PROTOCOL_DESC, "OSCAR(ICQ) v7,v8,v9" );
    static const unsigned int  K_PROTOCOL_ID = 0x01;
    
@@ -206,6 +205,5 @@ namespace Protocol
 	static const T_USER_STATUS			K_USER_STATUS_FREE4CHAT		= 0x0020;
 	static const T_USER_STATUS			K_USER_STATUS_INVISIBLE		= 0x0100;
 
-} // end namespace Protocol
 
 #endif /*OSCARCONSTANTS_H_*/

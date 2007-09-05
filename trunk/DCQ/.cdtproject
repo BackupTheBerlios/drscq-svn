@@ -8,9 +8,9 @@
 <attribute key="buildFromInf" value="true"/>
 <attribute key="verboseFlag" value="true"/>
 <attribute key="debugTargetMMP" value="DCQ.mmp"/>
-<attribute key="cleanCommand" value="clean"/>
 <attribute key="buildingTestComps" value="true"/>
 <attribute key="infBuildComponents" value=""/>
+<attribute key="cleanCommand" value="clean"/>
 </extension>
 <extension id="com.nokia.carbide.cpp.project.core.CarbideCPPScannerProvider" point="org.eclipse.cdt.core.ScannerInfoProvider"/>
 <extension id="com.nokia.cdt.debug.cw.symbian.SymbianE32" point="org.eclipse.cdt.core.BinaryParser"/>

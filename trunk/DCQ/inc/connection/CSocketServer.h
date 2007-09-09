@@ -26,15 +26,7 @@ class MProgressObserver;
 
 class CSocketServer : public CActive, public MTimeOutObserver
 {
-   public:
-      enum TSocketServerState
-      {
-         EIdle,
-         EComplete, EConnecting, EConnected,
-         ELookingUp, ELookUpFailed, EConnectFailed,
-         ETimedOut
-      };
-      
+ 
    public:
       // CancelCurrentAction and destroy
       ~CSocketServer();
@@ -77,8 +69,6 @@ class CSocketServer : public CActive, public MTimeOutObserver
       const RSocketServ& GetSocketServInstance() const;
 
       void Close();     
-      
-
 
    private:
       // C++ constructor
@@ -91,6 +81,15 @@ class CSocketServer : public CActive, public MTimeOutObserver
                              TUint16 aPort );        
 
    private:
+      
+      enum TSocketServerState
+      {
+         EIdle,
+         EConnecting, EConnected,
+         ELookingUp,
+         ETimedOut
+      };
+      
       // From CActive
       // Handle completion
       void RunL();

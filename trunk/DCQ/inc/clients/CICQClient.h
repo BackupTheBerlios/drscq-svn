@@ -33,13 +33,6 @@ static const TUint32 KUndefinedIAPid = 0x00;
 */
 class CICQClient : public CActive
 {     
-   public:
-      
-      enum TICQClientStatus
-      {
-         EIdle = 0
-      };
-      
    public: // Constructors and destructor
    
    	/**
@@ -99,7 +92,7 @@ class CICQClient : public CActive
       void Shutdown();
    
    private:
-   
+         
    	/**
    		* Constructor for performing 1st stage construction
    		*/
@@ -110,6 +103,14 @@ class CICQClient : public CActive
    		*/
    	void ConstructL();
       
+   private:
+      
+      enum TICQClientStatus
+      {
+         EIdle = 0,
+         EShuttingDown
+      };
+            
       // CActive implementations
       
       void RunL();

@@ -28,8 +28,7 @@
 
 // ========================= MEMBER FUNCTIONS ==================================
 CDCQAppUi::CDCQAppUi()
-: iIAPPreferences(),
-  iLoginView( NULL ),
+: iLoginView( NULL ),
   iICQClient( NULL ),
   iWaitDialog( NULL ),
   iIdle( true )
@@ -41,10 +40,10 @@ CDCQAppUi::~CDCQAppUi()
   if ( iICQClient != NULL )
   {
      iICQClient->Shutdown();
+     delete iICQClient;
+     iICQClient = NULL;
   }
-  delete iICQClient;
-  iICQClient = NULL;
-  
+    
   iWaitDialog = NULL;
 }
 
@@ -115,16 +114,6 @@ void CDCQAppUi::HandleResourceChangeL( TInt aType )
 
 
 
-void CDCQAppUi::SelectIAP()
-{
-   iIAPPreferences.SetDirection( ECommDbConnectionDirectionOutgoing );
-   iIAPPreferences.SetDialogPreference( ECommDbDialogPrefPrompt );
-   iIAPPreferences.SetIapId( 0 );
-   iIAPPreferences.SetBearerSet( 0 );
-}
-
-
-
 void CDCQAppUi::DialogDismissedL( TInt /* aButton */ )
 {
    if ( iICQClient != NULL )
@@ -139,6 +128,7 @@ void CDCQAppUi::DialogDismissedL( TInt /* aButton */ )
       iWaitDialog = NULL;
    }
 }
+
 
 
 void CDCQAppUi::NotifyProgress( TProgressInfoType aProgressType, TUint8 /* aPercentage */ )
@@ -178,6 +168,7 @@ void CDCQAppUi::NotifyProgress( TProgressInfoType aProgressType, TUint8 /* aPerc
       }   
    }   
 }
+
 
 
 void CDCQAppUi::NotifyError( TErrorObserverErrorType aErrorType, 

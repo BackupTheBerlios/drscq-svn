@@ -185,6 +185,8 @@ void CICQClient::CancelCurrentAction()
 
 void CICQClient::Shutdown()
 {
+   iClientStatus = EShuttingDown;
+   
    if ( IsConnected() )
    {
       iConnection.Close();
@@ -197,14 +199,19 @@ void CICQClient::Shutdown()
       iSocketServer = NULL;
    }
    
-   iConnectionPrefs = TCommDbConnPref();
+   iConnectionPrefs = TCommDbConnPref();   
+   
+   iClientStatus = EIdle;
 }
 
 
 
 void CICQClient::RunL()
 {
-   
+   switch( iClientStatus )
+   {
+      default : break;
+   }
 }
 
 

@@ -16,6 +16,8 @@
 #include "observer/MErrorObserver.h"
 #include "observer/MProgressObserver.h"
 
+#define NOTIFY_ERROR(a,b)    if(iErrorObserver!=NULL)iErrorObserver->NotifyError(a,b)
+#define NOTIFY_PROGRESS(a)   if(iProgressObserver!=NULL)iProgressObserver->NotifyProgress(a)
 
 CSocketServer::CSocketServer() 
 :  CActive( EPriorityStandard ), // Standard priority
@@ -62,25 +64,8 @@ void CSocketServer::ConstructL()
 
 CSocketServer::~CSocketServer()
 {
-   if ( iTransmitter != NULL )
-   {
-      iTransmitter->Cancel();
-   }
-   if ( iReceiver != NULL )
-   {
-      iReceiver->Cancel();
-   }
-   if ( iTimer != NULL )
-   {
-      iTimer->Cancel();
-   }
+   Close();
    
-   delete iReceiver;
-   delete iTransmitter;
-   delete iTimer;
-   iSocket.Close();
-   iSocketServ.Close();
-
    iErrorObserver = NULL;
    iProgressObserver = NULL;
 }
@@ -90,10 +75,7 @@ CSocketServer::~CSocketServer()
 void CSocketServer::InitL()
 {
    // Open a TCP socket
-   User::LeaveIfError( iSocket.Open( iSocketServ, KAfInet, KSockStream, KProtocolInetTcp ) );
-   
-   iReceiver    = CSocketReceiver::NewL( &iSocket );
-   iTransmitter = CSocketTransmitter::NewL( &iSocket );
+   User::LeaveIfError( iSocket.Open( iSocketServ, KAfInet, KSockStream, KProtocolInetTcp ) );      
 }
 
 
@@ -104,18 +86,16 @@ void CSocketServer::ConnectL( TUint32            aAddr,
                               MErrorObserver*    aErrorObserver, /* = NULL */
                               MProgressObserver* aProgressObserver /* = NULL */ )
 {
-   iPort = aPort;
-   iAddress.SetPort( aPort );
-   iAddress.SetAddress( aAddr );
-   iErrorObserver = aErrorObserver;
+   iPort             = aPort;  
+   iErrorObserver    = aErrorObserver;
    iProgressObserver = aProgressObserver;
-   iSocket.Connect( iAddress, iStatus );
-   iServerStatus = EConnecting;
+   iServerStatus     = EConnecting;
    
-   if ( iProgressObserver != NULL )
-   {
-      iProgressObserver->NotifyProgress( TProgressInfoTypes::EConnecting );                                                  
-   }  
+   iAddress.SetPort( aPort );
+   iAddress.SetAddress( aAddr );   
+   iSocket.Connect( iAddress, iStatus );
+   
+   NOTIFY_PROGRESS( TProgressInfoTypes::EConnecting );
    
    SetActive();
    
@@ -135,10 +115,7 @@ void CSocketServer::ConnectResolvedL( TUint32 aAddr, TUint16 aPort )
    iSocket.Connect( iAddress, iStatus );
    iServerStatus = EConnecting;
    
-   if ( iProgressObserver != NULL )
-   {
-      iProgressObserver->NotifyProgress( TProgressInfoTypes::EConnecting );
-   }  
+   NOTIFY_PROGRESS( TProgressInfoTypes::EConnecting );
    
    SetActive();
 }
@@ -154,17 +131,16 @@ void CSocketServer::ConnectL( const TDesC&       aServerName,
    iPort = aPort;
    iErrorObserver = aErrorObserver;
    iProgressObserver = aProgressObserver;
+   
    // Initiate DNS
    User::LeaveIfError( iResolver.Open( iSocketServ, KAfInet, KProtocolInetUdp ) );
+   
    // DNS request for name resolution
    iResolver.GetByName( aServerName, iNameEntry, iStatus );
    
    iServerStatus = ELookingUp;
    
-   if ( iProgressObserver != NULL )
-   {
-      iProgressObserver->NotifyProgress( TProgressInfoTypes::EResolvingServerName );
-   }  
+   NOTIFY_PROGRESS( TProgressInfoTypes::EResolvingServerName );
    
    // Request time out
    if ( aTimeout > 0 && !iTimer->IsActive() )
@@ -230,14 +206,20 @@ void CSocketServer::Close()
    if ( iTransmitter != NULL )
    {
       iTransmitter->Cancel();
+      delete iTransmitter;
+      iTransmitter = NULL;
    }
    if ( iReceiver != NULL )
    {
       iReceiver->Cancel();
+      delete iReceiver;
+      iReceiver = NULL;
    }
    if ( iTimer != NULL )
    {
       iTimer->Cancel();
+      delete iTimer;
+      iTimer = NULL;
    }
    
    iSocket.Close();
@@ -258,43 +240,40 @@ void CSocketServer::RunL()
           // IP connection request
           if ( iStatus == KErrNone )
           // Connection completed sucessfully
-          {                    
-             if ( iErrorObserver != NULL )
-             {
-                iErrorObserver->NotifyError( TErrorObserverErrorTypes::EErrorInfo,
-                                             TErrorObserverInfoTypes::ESuccessful );                                                  
-             }  
-             iServerStatus = EConnected;
+          {  
+             NOTIFY_ERROR( TErrorObserverErrorTypes::EErrorInfo,
+                           TErrorObserverInfoTypes::ESuccessful );
+                          
              // CancelCurrentAction TimeOut timer before completion
              iTimer->Cancel(); 
+             
+             // create new receiver/transmitter for the new connection
+             iReceiver     = CSocketReceiver::NewL( &iSocket );
+             iTransmitter  = CSocketTransmitter::NewL( &iSocket );
+             iServerStatus = EConnected;
           }
           else
-          {
-             iServerStatus = EConnectFailed;
-
-             if ( iErrorObserver != NULL )
-             {
-                iErrorObserver->NotifyError( TErrorObserverErrorTypes::EErrorCritical,
-                                             TErrorObserverInfoTypes::EConnectionFailed );
-             }
+          {  
+             NOTIFY_ERROR( TErrorObserverErrorTypes::EErrorCritical,
+                           TErrorObserverInfoTypes::EConnectionFailed );
+            
              // CancelCurrentAction TimeOut timer before completion
-             iTimer->Cancel(); 
+             iTimer->Cancel();              
+             iServerStatus = EIdle;
           }
           break;
       }
       case ETimedOut:
       {
-          // Timeout request
-         if ( iErrorObserver != NULL )
-         {
-            iErrorObserver->NotifyError( TErrorObserverErrorTypes::EErrorCritical,
-                                         TErrorObserverInfoTypes::ETimeOut );
-         }  
+         // Timeout request
+         NOTIFY_ERROR( TErrorObserverErrorTypes::EErrorCritical,
+                       TErrorObserverInfoTypes::ETimeOut );
          break;
       }
       case ELookingUp:
       {
           iResolver.Close();
+          
           if ( iStatus == KErrNone )
           // DNS look up successful
           {
@@ -302,17 +281,16 @@ void CSocketServer::RunL()
              
              // And connect to the IP address
              ConnectResolvedL( TInetAddr::Cast( iNameRecord.iAddr ).Address(), iPort );
-           }
+          }
           else
-          {   
-             iStatus = ELookUpFailed;
-             if ( iErrorObserver != NULL )
-             {
-                iErrorObserver->NotifyError( TErrorObserverErrorTypes::EErrorCritical,
-                                             TErrorObserverInfoTypes::EDNSFailure );
-             }
+          {         
+             NOTIFY_ERROR( TErrorObserverErrorTypes::EErrorCritical,
+                           TErrorObserverInfoTypes::EDNSFailure );
+             
              // CancelCurrentAction TimeOut timer before completion
              iTimer->Cancel(); 
+             
+             iStatus = EIdle;
           }
           break;
       }
@@ -349,11 +327,8 @@ void CSocketServer::DoCancel()
    
    iServerStatus = EIdle;
    
-   if ( iErrorObserver != NULL )
-   {
-      iErrorObserver->NotifyError( TErrorObserverErrorTypes::EErrorWarning,
-                                   TErrorObserverInfoTypes::ECanceled );
-   }
+   NOTIFY_ERROR( TErrorObserverErrorTypes::EErrorWarning,
+                 TErrorObserverInfoTypes::ECanceled );   
 }
 
 

@@ -65,3 +65,5 @@ SOURCEPATH ..\src\clients
 SOURCE CICQClient.cpp
 
 
+SOURCEPATH ..\src\clients\framework
+SOURCE CTransition.cpp CState.cpp
